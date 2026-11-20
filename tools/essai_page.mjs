@@ -282,7 +282,7 @@ for (const [nom, w, h, mobile] of [["telephone", 390, 844, true], ["ordinateur",
   await val(`document.querySelector("#btn-langue").click()`); await pause(1800);
   verif(await val(`document.documentElement.dir === "rtl" && document.documentElement.lang === "ar"`), "arabe : page de droite à gauche");
   verif(await val(`document.title.includes("أسعار") && document.querySelector('link[rel=canonical]').href.endsWith("/ar/")`), "arabe : titre arabe et adresse propre /ar/ (une adresse par langue)");
-  verif(await val(`document.querySelector("h1").textContent.includes("أسعار")`), "arabe : titre traduit");
+  verif(await val(`document.querySelector("h1").textContent.includes("النظافة")`), "arabe : titre traduit");
   verif(await val(`location.pathname === "/ar/"`), "arabe : adresse /ar/");
   verif(await val(`document.querySelector("#qr-image").src.endsWith("hygiene-ar.svg")`), "arabe : QR code de la page arabe");
   verif(await val(`document.documentElement.scrollWidth <= innerWidth`), "arabe : rien ne dépasse de l'écran");
