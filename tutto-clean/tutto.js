@@ -12,6 +12,9 @@
   var NOMS_ENS = { carrefour: "Carrefour", geant: "Géant" };
   var $ = function (id) { return document.getElementById(id); };
   var code = "", catalogue = [], miens = {}, fam = "", texte = "", seulement = false, montres = PAR_PAGE;
+  var commandes = [], filtreEtat = "a-traiter";
+  var ETATS = [["nouvelle", "Nouvelle"], ["confirmee", "Confirmée"], ["livree", "Livrée"], ["annulee", "Annulée"]];
+  var NOMS_MAG = { carrefour: "Carrefour", geant: "Géant", tutto: "Tutto Clean" };
 
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
   function dt(v) { return v == null ? "" : Number(v).toFixed(3).replace(".", ","); }
@@ -36,6 +39,7 @@
       catalogue.forEach(function (p) { p._cle = window.sonRecherche ? sonRecherche.cle([p.m, p.n, p.q].join(" ")) : " " + [p.m, p.n].join(" ").toLowerCase() + " "; });
       miens = {}; (res[1].produits || []).forEach(function (p) { miens[p.id] = p; });
       afficherTout();
+      chargerCommandes();
     });
   }
   function sortir() { try { localStorage.removeItem(CLE_CODE); } catch (e) { /* rien */ } location.reload(); }
@@ -129,6 +133,49 @@
     }).catch(function (e) { err.style.color = ""; err.textContent = "Pas ajouté (" + e.message + ")"; err.hidden = false; });
   }
 
+  /* ---------- « Mes commandes » (21/11/2026) : commandes préparées sur le site, état noté par la boutique */
+  function chargerCommandes() {
+    return fetch(API + "/commandes", { headers: { "X-Code": code }, cache: "no-store" }).then(function (r) { return r.ok ? r.json() : { commandes: [] }; })
+      .then(function (d) { commandes = (d.commandes || []).filter(function (c) { return c.c !== "HM-000000-TEST"; }); afficherCommandes(); })
+      .catch(function () { $("liste-cmd").innerHTML = '<li class="vide">Commandes injoignables pour le moment : réessayez avec « Actualiser ».</li>'; });
+  }
+  function total(c) { return c.t != null ? c.t : c.l.reduce(function (s, x) { return s + (x.p || 0) * x.q; }, 0); }
+  function aTraiter(c) { return c.s === "nouvelle" || c.s === "confirmee"; }
+  function afficherCommandes() {
+    var nbAT = commandes.filter(aTraiter).length;
+    $("nb-a-traiter").hidden = !nbAT; $("nb-a-traiter").textContent = nbAT;
+    var mois = new Date().toISOString().slice(0, 7), duMois = commandes.filter(function (c) { return c.d.slice(0, 7) === mois; });
+    var livrees = duMois.filter(function (c) { return c.s === "livree"; });
+    $("chiffres-cmd").innerHTML = [[nbAT, "à traiter"], [duMois.length, "ce mois-ci"], [livrees.length, "livrées ce mois"],
+      [dt(livrees.reduce(function (s, c) { return s + total(c); }, 0)), "DT livrés ce mois"]]
+      .map(function (x) { return "<div><b>" + esc(x[0]) + "</b><span>" + esc(x[1]) + "</span></div>"; }).join("");
+    document.querySelectorAll("#filtres-cmd .puce").forEach(function (b) { b.setAttribute("aria-pressed", String(b.getAttribute("data-etat") === filtreEtat)); });
+    var l = commandes.filter(function (c) { return filtreEtat === "a-traiter" ? aTraiter(c) : !filtreEtat || c.s === filtreEtat; });
+    $("liste-cmd").innerHTML = l.length ? l.map(function (c) {
+      var d = new Date(c.d), n = c.l.reduce(function (a, x) { return a + x.q; }, 0);
+      return '<li class="cmd" data-s="' + esc(c.s) + '" data-k="' + esc(c.k) + '"><div class="cmd-tete"><span class="num">' + esc(c.c) + '</span><span class="quand">' +
+        esc(d.toLocaleDateString("fr-FR") + " " + d.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })) + "</span>" +
+        (c.g ? '<span class="gouv">' + esc(c.g) + "</span>" : "") + '<span class="tot">' + n + " art. · " + esc(dt(total(c))) + " DT</span></div><ul>" +
+        c.l.map(function (x) { return "<li>" + x.q + " × " + esc((x.m ? x.m + " " : "") + x.n) + (x.qt ? " (" + esc(x.qt) + ")" : "") + " — " + esc(dt(x.p)) + " DT " + esc(x.tc ? "(votre prix)" : "(" + (NOMS_MAG[x.e] || x.e || "") + ")") + "</li>"; }).join("") +
+        '</ul><div class="etats">' + ETATS.map(function (e) { return '<button type="button" data-etat="' + e[0] + '" aria-pressed="' + (c.s === e[0]) + '">' + e[1] + "</button>"; }).join("") +
+        '</div><span class="etat-msg" aria-live="polite"></span></li>';
+    }).join("") : '<li class="vide">' + (filtreEtat === "a-traiter" ? "Aucune commande à traiter. 👍" : "Aucune commande ici.") + "</li>";
+  }
+  function changerEtat(li, etat) {
+    var k = li.getAttribute("data-k"), msg = li.querySelector(".etat-msg");
+    msg.textContent = "…";
+    appel("/commande-etat", { k: k, s: etat }).then(function () {
+      commandes.forEach(function (c) { if (c.k === k) c.s = etat; });
+      afficherCommandes();
+    }).catch(function (e) { msg.textContent = "Pas enregistré (" + e.message + ")"; msg.style.color = "var(--rouge)"; });
+  }
+  function montrerOnglet(lequel) {
+    var cmd = lequel === "commandes";
+    $("onglet-commandes").hidden = !cmd; $("onglet-prix").hidden = cmd;
+    $("onglet-btn-commandes").setAttribute("aria-pressed", String(cmd)); $("onglet-btn-prix").setAttribute("aria-pressed", String(!cmd));
+    if (cmd) chargerCommandes();
+  }
+
   /* ---------- démarrage */
   function demarrer() {
     $("ajout-famille").innerHTML = '<option value="">Choisir…</option>' + FAMILLES.map(function (f) { return '<option value="' + f[0] + '">' + esc(f[1]) + "</option>"; }).join("");
@@ -137,6 +184,11 @@
       ouvrir($("code").value.trim(), $("souvenir").checked).catch(function () { $("erreur-code").textContent = "Code incorrect."; $("erreur-code").hidden = false; });
     });
     $("btn-sortir").addEventListener("click", sortir);
+    $("onglet-btn-prix").addEventListener("click", function () { montrerOnglet("prix"); });
+    $("onglet-btn-commandes").addEventListener("click", function () { montrerOnglet("commandes"); });
+    $("filtres-cmd").addEventListener("click", function (ev) { var b = ev.target.closest(".puce"); if (b) { filtreEtat = b.getAttribute("data-etat"); afficherCommandes(); } });
+    $("btn-actualiser").addEventListener("click", chargerCommandes);
+    $("liste-cmd").addEventListener("click", function (ev) { var b = ev.target.closest("[data-etat]"); if (b) changerEtat(b.closest(".cmd"), b.getAttribute("data-etat")); });
     $("form-ajout").addEventListener("submit", ajouter);
     $("familles").addEventListener("click", function (ev) { var b = ev.target.closest(".famille"); if (!b) return; fam = b.getAttribute("data-f"); montres = PAR_PAGE; afficherTout(); });
     var t; $("q").addEventListener("input", function () { clearTimeout(t); t = setTimeout(function () { texte = $("q").value.trim(); montres = PAR_PAGE; afficherTout(); }, 200); });

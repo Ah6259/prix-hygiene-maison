@@ -22,3 +22,5 @@
 .commandes td.q{width:42px;font-weight:800;color:var(--orange-fonce)}
 .commandes td.p{text-align:end;white-space:nowrap}
 .vide{background:#fff;border:1px dashed var(--bord);border-radius:14px;padding:22px;text-align:center;color:var(--doux)}
+.commandes .etat{border-radius:999px;padding:2px 10px;font-size:12px;font-weight:800;color:#fff;background:#94A3B8}
+.commandes .etat-nouvelle{background:var(--orange)}.commandes .etat-confirmee{background:var(--bleu)}.commandes .etat-livree{background:#1DAA61}

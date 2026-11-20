@@ -14,7 +14,7 @@
 <meta name="theme-color" content="#0B6E6E">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap">
 <link rel="stylesheet" href="../style.css?v=20261120d">
-<link rel="stylesheet" href="tutto.css?v=20261120d">
+<link rel="stylesheet" href="tutto.css?v=20261121a">
 </head>
 <body class="espace">
 <header class="entete">
@@ -41,7 +41,27 @@
 
   <section id="espace" hidden>
     <div class="resume" id="resume"></div>
+    <nav class="onglets" aria-label="Parties de l'espace">
+      <button type="button" class="onglet" id="onglet-btn-prix" aria-pressed="true">🏷️ Mes prix</button>
+      <button type="button" class="onglet" id="onglet-btn-commandes" aria-pressed="false">📦 Mes commandes <span class="pastille-nb" id="nb-a-traiter" hidden></span></button>
+    </nav>
 
+    <div id="onglet-commandes" hidden>
+      <div class="chiffres-cmd" id="chiffres-cmd"></div>
+      <div class="filtres-cmd" id="filtres-cmd">
+        <button type="button" class="puce" data-etat="a-traiter" aria-pressed="true">À traiter</button>
+        <button type="button" class="puce" data-etat="livree" aria-pressed="false">Livrées</button>
+        <button type="button" class="puce" data-etat="annulee" aria-pressed="false">Annulées</button>
+        <button type="button" class="puce" data-etat="" aria-pressed="false">Toutes</button>
+        <button type="button" class="btn-filtre" id="btn-actualiser">↻ Actualiser</button>
+      </div>
+      <ul class="liste-cmd" id="liste-cmd"></ul>
+      <p class="note">Chaque commande préparée sur le site arrive aussi sur votre WhatsApp avec le même numéro (HM-…) et les coordonnées du client.
+        Ici, notez où elle en est : <b>Confirmée</b> quand le client a accepté votre prix, <b>Livrée</b> une fois livrée, <b>Annulée</b> sinon.
+        Le nom, le téléphone et l'adresse du client ne sont pas gardés ici : ils sont dans WhatsApp.</p>
+    </div>
+
+    <div id="onglet-prix">
     <details class="bloc-ajout" id="bloc-ajout">
       <summary>➕ Ajouter un produit qui n'est pas dans la liste</summary>
       <form id="form-ajout" class="champs ajout-champs" autocomplete="off">
@@ -66,9 +86,10 @@
     <div class="plus-zone"><button type="button" class="btn-plus" id="btn-plus" hidden>Voir plus</button></div>
     <p class="note">Tapez votre prix (sans la livraison) puis « Enregistrer » : il apparaît tout de suite sur le site, à côté de Carrefour et Géant,
       avec « + livraison ». Décochez « En stock » quand vous n'en avez plus ; « Retirer » enlève votre prix du site.</p>
+    </div>
   </section>
 </main>
 <script src="../assets/son.js?v=20261120a"></script>
-<script src="tutto.js?v=20261120d"></script>
+<script src="tutto.js?v=20261121a"></script>
 </body>
 </html>

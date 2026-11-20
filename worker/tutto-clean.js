@@ -5,6 +5,7 @@
 // POST /verifier (en-tête X-Code) -> {ok:true} si le code est bon
 // Le code de la boutique n'est jamais écrit ici : seulement son empreinte SHA-256 (secret CODE_SHA256 du Worker).
 const ORIGINES = ["https://hygiene.clicvia.com", "http://127.0.0.1"];
+const ETATS = ["nouvelle", "confirmee", "livree", "annulee"];
 const FAMILLES = ["linge", "vaisselle", "maison", "javel", "desodorisant", "accessoires", "papier", "bebe", "feminine", "corps", "cheveux", "bouche", "soins"];
 
 function entetes(req, extra = {}) {
@@ -87,13 +88,28 @@ export default {
         p: Number(l.p) > 0 && Number(l.p) < 10000 ? Math.round(Number(l.p) * 1000) / 1000 : null, e: texte(l.e, 12), tc: !!l.tc }));
       if (!lignes.length) return json(req, { erreur: "vide" }, 400);
       const quand = new Date().toISOString();
-      const cmd = { c: num, d: quand, g: texte(b.g, 30), l: lignes, t: Math.round(lignes.reduce((s, l) => s + (l.p || 0) * l.q, 0) * 1000) / 1000, langue: b.lang === "ar" ? "ar" : "fr" };
+      const cmd = { s: "nouvelle", c: num, d: quand, g: texte(b.g, 30), l: lignes, t: Math.round(lignes.reduce((s, l) => s + (l.p || 0) * l.q, 0) * 1000) / 1000, langue: b.lang === "ar" ? "ar" : "fr" };
       await env.TUTTO.put("cmd:" + quand.slice(0, 10) + ":" + num, JSON.stringify(cmd), { expirationTtl: 60 * 60 * 24 * 400 });
+      return json(req, { ok: true });
+    }
+    // état d'une commande, changé par la BOUTIQUE seulement (onglet « Mes commandes » de son espace, 21/11/2026)
+    if (req.method === "POST" && url.pathname === "/commande-etat") {
+      if (!(await codeBon(req, env))) return json(req, { erreur: "code" }, 403);
+      let b;
+      try { b = await req.json(); } catch { return json(req, { erreur: "illisible" }, 400); }
+      const cle = texte(b.k, 60);
+      if (!/^cmd:\d{4}-\d{2}-\d{2}:HM-\d{6}-[A-Z0-9]{4}$/.test(cle) || !ETATS.includes(b.s)) return json(req, { erreur: "demande" }, 400);
+      const cmd = await env.TUTTO.get(cle, "json");
+      if (!cmd) return json(req, { erreur: "commande inconnue" }, 404);
+      cmd.s = b.s;
+      cmd.h = (cmd.h || []).concat([[b.s, new Date().toISOString()]]).slice(-20);
+      await env.TUTTO.put(cle, JSON.stringify(cmd), { expirationTtl: 60 * 60 * 24 * 400 });
       return json(req, { ok: true });
     }
     if (req.method === "GET" && url.pathname === "/commandes") {
       const c = (req.headers.get("X-Code") || "").trim();
-      if (c.length < 6 || (await sha256(c)) !== env.ADMIN_SHA256) return json(req, { erreur: "code" }, 403);
+      const h = c.length >= 6 ? await sha256(c) : "";
+      if (!h || (h !== env.ADMIN_SHA256 && h !== env.CODE_SHA256)) return json(req, { erreur: "code" }, 403);   // Ahmed (lecture) ou la boutique
       const cles = [];
       let curseur;
       do {
@@ -101,7 +117,7 @@ export default {
         cles.push(...l.keys.map(k => k.name)); curseur = l.list_complete ? null : l.cursor;
       } while (curseur && cles.length < 3000);
       const recents = cles.sort().reverse().slice(0, 400);
-      const cmds = (await Promise.all(recents.map(k => env.TUTTO.get(k, "json")))).filter(Boolean);
+      const cmds = (await Promise.all(recents.map(async k => { const v = await env.TUTTO.get(k, "json"); return v && { ...v, k, s: v.s || "nouvelle" }; }))).filter(Boolean);
       return json(req, { total: cles.length, commandes: cmds });
     }
     return json(req, { erreur: "adresse inconnue" }, 404);

@@ -52,6 +52,19 @@ function fauxCarnet(req, res, chemin) {
   const bon = req.headers["x-code"] === BON_CODE;
   if (req.method === "GET" && chemin === "/__tutto/prix") return res.end(JSON.stringify({ ...carnet, produits: carnet.produits.filter(p => p.p != null) }));
   if (req.method === "POST" && chemin === "/__tutto/verifier") { res.statusCode = bon ? 200 : 403; return res.end(JSON.stringify({ ok: bon })); }
+  if (req.method === "GET" && chemin === "/__tutto/commandes") {
+    if (!bon) { res.statusCode = 403; return res.end('{"erreur":"code"}'); }
+    return res.end(JSON.stringify({ commandes: commandesNotees.map((c, i) => ({ s: "nouvelle", d: "2026-11-21T10:0" + (i % 10) + ":00Z", ...c, k: "cmd:2026-11-21:" + c.c })) }));
+  }
+  if (req.method === "POST" && chemin === "/__tutto/commande-etat") {
+    let corps = ""; req.on("data", c => { corps += c; }); req.on("end", () => {
+      if (!bon) { res.statusCode = 403; return res.end('{"erreur":"code"}'); }
+      const b = JSON.parse(corps), c = commandesNotees.find(x => "cmd:2026-11-21:" + x.c === b.k);
+      if (!c) { res.statusCode = 404; return res.end("{}"); }
+      c.s = b.s; res.end('{"ok":true}');
+    });
+    return;
+  }
   if (req.method === "POST" && chemin === "/__tutto/commande") {
     let corps = ""; req.on("data", c => { corps += c; }); req.on("end", () => { commandesNotees.push(JSON.parse(corps)); res.end('{"ok":true}'); });
     return;
@@ -278,6 +291,20 @@ await val(`(() => { document.querySelector("#bloc-ajout").open = true; const f =
 const ajoute = carnet.produits.find(p => p.n === "Javel maison 5L");
 verif(ajoute && ajoute.id.startsWith("tc:") && ajoute.p === 6.25 && ajoute.f === "javel" && ajoute.m === "TUTTO", "produit ajouté dans le carnet (tc:…, 6,250 DT, Javel, marque TUTTO)");
 verif(await val(`document.documentElement.scrollWidth <= innerWidth`), "espace : rien ne dépasse de l'écran");
+// onglet « Mes commandes »
+verif(await val(`document.querySelector("#nb-a-traiter").textContent`) === String(commandesNotees.length), `pastille : ${commandesNotees.length} commandes à traiter`);
+await val(`document.querySelector("#onglet-btn-commandes").click()`); await pause(800);
+verif(await val(`!document.querySelector("#onglet-commandes").hidden && document.querySelector("#onglet-prix").hidden`), "onglet « Mes commandes » ouvert, prix cachés");
+verif(await val(`document.querySelectorAll("#liste-cmd .cmd").length`) === commandesNotees.length, "toutes les commandes du site sont listées");
+const premiere = commandesNotees[0].c;
+verif((await val(`document.querySelector("#liste-cmd .cmd .num").textContent`)) && (await val(`document.querySelector("#liste-cmd").textContent.includes("${premiere}")`)), "numéro HM-… affiché (le même que sur WhatsApp)");
+await val(`[...document.querySelectorAll("#liste-cmd .cmd")].find(c => c.textContent.includes("${premiere}")).querySelector('[data-etat="livree"]').click()`); await pause(800);
+verif(commandesNotees[0].s === "livree", "« Livrée » enregistré dans le carnet");
+verif(!(await val(`document.querySelector("#liste-cmd").textContent.includes("${premiere}")`)), "commande livrée : sortie de « À traiter »");
+await val(`document.querySelector('#filtres-cmd [data-etat="livree"]').click()`); await pause(300);
+verif(await val(`document.querySelector("#liste-cmd").textContent.includes("${premiere}")`), "filtre « Livrées » : elle y est");
+verif(await val(`document.documentElement.scrollWidth <= innerWidth`), "onglet commandes : rien ne dépasse de l'écran");
+await capture("tutto-commandes");
 await capture("tutto-espace");
 verif(erreurs.length === 0, `aucune erreur JavaScript${erreurs.length ? " : " + erreurs.join(" | ") : ""}`);
 chrome.kill(); srv.close(); ws.close();

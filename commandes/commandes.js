@@ -10,7 +10,9 @@
   function dt(v) { return v == null ? "—" : Number(v).toFixed(3).replace(".", ",") + " DT"; }
   function quand(iso) { var d = new Date(iso); return d.toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric" }) + " à " + d.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }); }
   var NOMS = { carrefour: "Carrefour", geant: "Géant", tutto: "Tutto Clean" };
+  var ETATS = { nouvelle: "Nouvelle", confirmee: "Confirmée", livree: "Livrée", annulee: "Annulée" };
 
+  function total(c) { return c.t != null ? c.t : c.l.reduce(function (s, x) { return s + (x.p || 0) * x.q; }, 0); }
   function charger() {
     return fetch(API + "/commandes", { headers: { "X-Code": code }, cache: "no-store" }).then(function (r) {
       if (r.status === 403) throw new Error("code");
@@ -21,18 +23,19 @@
   function afficher() {
     var p = $("periode").value, depuis = p === "tout" ? 0 : Date.now() - Number(p) * 864e5;
     var l = toutes.filter(function (c) { return new Date(c.d).getTime() >= depuis; });
-    var total = l.reduce(function (s, c) { return s + (c.t || 0); }, 0), articles = l.reduce(function (s, c) { return s + c.l.reduce(function (a, x) { return a + x.q; }, 0); }, 0);
+    var total = l.reduce(function (s, c) { return s + total(c); }, 0), articles = l.reduce(function (s, c) { return s + c.l.reduce(function (a, x) { return a + x.q; }, 0); }, 0);
+    var livrees = l.filter(function (c) { return c.s === "livree"; }).length;
     var aujourdHui = toutes.filter(function (c) { return new Date(c.d).toDateString() === new Date().toDateString(); }).length;
     var gouv = {}; l.forEach(function (c) { if (c.g) gouv[c.g] = (gouv[c.g] || 0) + 1; });
     var top = Object.keys(gouv).sort(function (a, b) { return gouv[b] - gouv[a]; })[0];
     $("chiffres").innerHTML = [
-      [l.length, "commandes sur la période"], [aujourdHui, "aujourd'hui"], [articles, "articles"],
+      [l.length, "commandes sur la période"], [livrees, "livrées (notées par Tutto Clean)"], [aujourdHui, "aujourd'hui"], [articles, "articles"],
       [dt(total).replace(" DT", ""), "DT (total indicatif)"], [top || "—", "gouvernorat le plus fréquent"]
     ].map(function (x) { return '<div class="chiffre"><b>' + esc(x[0]) + "</b><span>" + esc(x[1]) + "</span></div>"; }).join("");
     $("commandes").innerHTML = l.length ? l.map(function (c) {
       var n = c.l.reduce(function (a, x) { return a + x.q; }, 0);
       return "<li><details><summary><span class=\"num\">" + esc(c.c) + '</span><span class="quand">' + esc(quand(c.d)) + "</span>" +
-        (c.g ? '<span class="gouv">' + esc(c.g) + "</span>" : "") + "<span>" + n + " article" + (n > 1 ? "s" : "") + '</span><span class="tot">' + esc(dt(c.t)) + "</span></summary><table>" +
+        (c.g ? '<span class="gouv">' + esc(c.g) + "</span>" : "") + '<span class="etat etat-' + esc(c.s || "nouvelle") + '">' + esc(ETATS[c.s] || "Nouvelle") + "</span><span>" + n + " article" + (n > 1 ? "s" : "") + '</span><span class="tot">' + esc(dt(total(c))) + "</span></summary><table>" +
         c.l.map(function (x) {
           return '<tr><td class="q">' + x.q + " ×</td><td>" + esc((x.m ? x.m + " " : "") + x.n) + (x.qt ? " <small>(" + esc(x.qt) + ")</small>" : "") +
             '</td><td class="p">' + esc(dt(x.p)) + "<br><small>" + esc(x.tc ? "prix Tutto Clean" : (NOMS[x.e] || x.e || "")) + "</small></td></tr>";
