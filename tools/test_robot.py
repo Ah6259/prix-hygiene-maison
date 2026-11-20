@@ -104,6 +104,12 @@ page = ('<article class="product-miniature" data-id-product="11"><h3 itemprop="n
 lus = relever.geant_page(page)
 ok(len(lus) == 1 and lus[0]["prix"] == 25.9 and lus[0]["reg"] == 29.9, "1 produit en stock, 25,900 DT barré 29,900 DT")
 
+print("Photo Géant : grand format absent -> format « home »")
+ok(relever.adresses_photo("https://cdn.geantdrive.tn/tunis-city/974290-large_default/eponge.jpg") ==
+   ["https://cdn.geantdrive.tn/tunis-city/974290-large_default/eponge.jpg", "https://cdn.geantdrive.tn/tunis-city/974290-home_default/eponge.jpg"],
+   "adresse de secours « home_default » essayée après « large_default »")
+ok(relever.adresses_photo("https://back.carrefour.tn/media/x.webp") == ["https://back.carrefour.tn/media/x.webp"], "Carrefour : une seule adresse")
+
 print("Offre et accueil léger")
 o = relever.offre("cf:1", "carrefour", "Lessive liquide Ariel 3L", "ARIEL", "linge", 30.0, 36.0, [30, 40], "u", "img")
 ok(o["f"] == "linge" and o["pu"] == [10.0, "L"] and o["r"] == 36.0, "offre : famille, prix au litre, prix barré")

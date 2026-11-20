@@ -262,6 +262,11 @@ def geant(local=False):
 
 
 # ---------------------------------------------------------------- photos (copies allégées)
+def adresses_photo(src):
+    """Adresses à essayer pour une photo : celle du magasin, puis, chez Géant, le format « home » quand le grand format manque
+    (235 produits Géant sans photo le 21/11/2026 : « …-large_default/… » -> 404, « …-home_default/… » -> 200)."""
+    autres = [src.replace("-large_default/", "-home_default/")] if "-large_default/" in src else []
+    return [src] + autres
 def photos(offres, sans_reseau=False, maximum=4000):
     """Chaque photo de magasin est copiée UNE fois en WebP 320 px (≈ 10 Ko) : assets/img/p/<empreinte>.webp.
     Photo introuvable ou illisible : la carte montre le dessin de la famille (jamais une image d'un autre site)."""
@@ -286,7 +291,15 @@ def photos(offres, sans_reseau=False, maximum=4000):
         if sans_reseau or Image is None or nouvelles >= maximum:
             continue
         try:
-            brut = http_get(src, timeout=30)
+            brut = None
+            for adresse in adresses_photo(src):          # Géant : grand format parfois absent (404) -> format « home » (21/11/2026)
+                try:
+                    brut = http_get(adresse, timeout=30)
+                    break
+                except RuntimeError:
+                    continue
+            if brut is None:
+                raise RuntimeError("aucune taille de photo disponible")
             im = Image.open(io.BytesIO(brut))
             im = im.convert("RGBA") if im.mode in ("P", "LA") else im
             if im.mode == "RGBA":                    # fond blanc (le site met les photos sur blanc)
