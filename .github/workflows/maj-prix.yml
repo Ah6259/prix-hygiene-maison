@@ -1,0 +1,53 @@
+# Relevé de nuit des prix (Carrefour magasin par magasin, Géant) -> données + photos ENREGISTRÉES d'abord (règle § 55),
+# puis essai de la page dans Chromium. Un essai rouge n'efface jamais le relevé ; il se voit dans le journal.
+# Dépôt PUBLIC : minutes GitHub gratuites.
+name: maj-prix
+on:
+  schedule:
+    - cron: "17 0 * * *"      # vers 1h17 à Tunis (GitHub a souvent du retard)
+  workflow_dispatch:
+concurrency:
+  group: maj-prix
+  cancel-in-progress: false
+permissions:
+  contents: write
+jobs:
+  relever:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      TZ: Africa/Tunis
+      PYTHONUTF8: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Outils
+        run: |
+          pip install --quiet pillow
+      - name: Tests du robot sans reseau
+        run: |
+          python tools/test_robot.py
+      - name: Releve des prix
+        run: |
+          python robot/relever.py
+      - name: Enregistrer les donnees
+        if: always()
+        run: |
+          git config user.name "robot-prix"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data donnees assets/img/p
+          if git diff --cached --quiet; then
+            echo "Rien de nouveau"
+          else
+            git commit -q -m "Relevé des prix du $(date +%d/%m/%Y)"
+            git pull -q --rebase -X theirs
+            git push -q
+          fi
+      - name: Essai de la page dans Chromium
+        run: |
+          node tools/essai_page.mjs . captures

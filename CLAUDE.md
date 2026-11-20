@@ -1,0 +1,35 @@
+# Mémoire du projet — Prix Hygiène & Maison (https://hygiene.clicvia.com)
+
+Dépôt PUBLIC `Ah6259/prix-hygiene-maison` (GitHub Pages, branche main, racine). Rien de personnel ni de secret ici.
+Propriétaire : Ahmed (`Ah6259`), non développeur : expliquer simplement, en français. Règles communes, procédure « nouveau site »
+et modèle « suivi de prix » : dépôt privé projets-ahmed (dossier parent `_claude code project\`). Brief : `produits entretien hygiene/brief d'Ahmed 2026-11-20.md`.
+
+## Le site (créé le 20/11/2026)
+- Pour un ami d'Ahmed qui vend des produits d'entretien, de nettoyage et d'hygiène. Le site montre les prix de Carrefour et Géant
+  (relevés chaque nuit, produits EN STOCK seulement) ; le visiteur fait un panier et COMMANDE sur le WhatsApp de la boutique
+  (+216 99 453 345) ; la boutique répond avec SES prix et la livraison (toute la Tunisie).
+- **Consignes d'Ahmed (20/11)** : sur le site, SEULEMENT l'adresse de la boutique (lien Google Maps) et son numéro ; RIEN sur le
+  pourcentage d'Ahmed (pas de carnet des commandes pour l'instant ; le numéro HM-AAMMJJ-XXXX de chaque commande permettra de le
+  faire plus tard) ; photos des produits : copies allégées des photos des magasins (accord de TOUS les magasins déclaré par Ahmed).
+- FR + AR (`?lang=ar`, bouton, choix gardé), nombres de gauche à droite en arabe, mode sombre, téléphone d'abord.
+- Accueil léger (règle § 60) : `data/accueil.json` (24 produits + nombres) tout de suite, `data/produits.json` au 1er geste.
+- Familles (13) : linge, vaisselle, maison, javel (et WC), desodorisant, accessoires, papier, bebe, feminine, corps, cheveux, bouche, soins.
+- Cache des téléphones : changer le `?v=` de style.css / app.js dans index.html à chaque modification (20261120a) ; `CACHE_VERSION` de sw.js.
+- GoatCounter : préfixe `/prix-hygiene-maison` (`assets/stats.js`), compteur commun ; clic « commande envoyée » compté comme événement.
+
+## Robot (`.github/workflows/maj-prix.yml`, vers 1h17)
+- `robot/relever.py` : Carrefour par son API GraphQL (33 rayons en un seul filtre `category_uid:{in:[…]}`, CHAQUE magasin lu,
+  prix le plus courant, marque = champ `brand` du magasin), Géant Drive (10 sous-rayons, HTML, noms coupés « … » relus dans l'adresse).
+- `robot/familles.py` : famille par le NOM (règle § 23 ; cas précis d'abord, puis le mot écrit le plus tôt ; le rayon confirme),
+  contenance jamais devinée (nom puis description ; « 3L +1L gratuit » = 4 L ; « dont 1 kg gratuit » = rien en plus ; lessive au lavage ;
+  couches au nombre, le « kg » d'une couche = poids de l'enfant ; « 50x60 cm » n'est pas un lot ; essuie-tout Jumbo : pas de prix au rouleau).
+- Panne d'un magasin (§ 51) : ses derniers prix restent, avec leur date ; robot rouge seulement après 2 jours.
+- Photos : WebP 320 px dans `assets/img/p/` (600 nouvelles au plus par nuit), carnet `donnees/images.json`.
+- Historique = la vérité : `donnees/historique.json` (jamais refait depuis `donnees/brut/`, qui n'est pas versionné).
+- Étude des sources (rayons, chiffres, pièges) : `produits entretien hygiene/etude des sources 2026-11-20.md` (projets-ahmed).
+
+## Tests
+- `python tools/test_robot.py` (sans réseau, vrais textes pièges des magasins) ; `node tools/essai_page.mjs .` (Chromium,
+  390 et 1300 px, FR et AR, données inventées : familles, recherche, tri, panier, message WhatsApp, rien qui dépasse).
+- Avant d'envoyer un robot modifié : `python3 "../../outils communs/envoi-robot/controle_robots.py" --local .`
+- Page 404 commune : `python "../../outils communs/page-404/installer.py" --verifier .`
