@@ -27,6 +27,7 @@ for (let i = 0; i < 70; i++) {
     s: i % 2 ? "liquide" : "poudre" });
 }
 produits[5].n = "Lessive poudre OMO main 4kg";
+produits[1].i = "assets/og-image-v3.jpg";   // photo pas carrée (1200 × 630) : la carte ne doit pas grandir
 const familles = {}; produits.forEach(p => { familles[p.f] = (familles[p.f] || 0) + 1; });
 const rayons = {}; produits.forEach(p => { const r = rayons[p.f] = rayons[p.f] || { n: 0, s: {}, i: null }; r.n++; r.s[p.s] = (r.s[p.s] || 0) + 1; });
 const promos = produits.filter(p => p.r).map(({ u, ...p }) => p);
@@ -138,6 +139,8 @@ for (const [nom, w, h, mobile] of [["telephone", 390, 844, true], ["ordinateur",
   verif((await val(`document.querySelector('.hero .btn-orange').href`) || "").startsWith("https://wa.me/21699453345"), "bandeau : « Commander chez Tutto Clean »");
   await val(`document.querySelector("#voir-tous").click()`); await pause(300);
   verif(await val(`document.querySelectorAll("#grille .carte").length`) === 24, "« Voir tous les produits » : 24 cartes");
+  await val(`document.querySelectorAll("#grille img").forEach(i => { i.loading = "eager"; })`); await pause(600);
+  verif(await val(`(() => { const h = [...document.querySelectorAll("#grille .carte .photo")].map(p => Math.round(p.getBoundingClientRect().height)); return h.length > 3 && Math.max(...h) - Math.min(...h) <= 1; })()`), "photos : même hauteur pour toutes les cartes (photo pas carrée comprise)");
   verif(await val(`document.querySelectorAll("#familles .famille").length`) === 15, "boutons « Tout », « Tutto Clean » et 13 familles");
   verif((await val(`document.querySelector('#familles [data-f="__tutto"] small')?.textContent`)) === "2", "Tutto Clean : 2 produits (« en stock » décoché = caché)");
   verif((await val(`document.querySelector('.carte[data-id="cf:3"] .tutto')?.textContent`) || "").includes("1,234 DT + livraison"), "carte : prix Tutto Clean + livraison");

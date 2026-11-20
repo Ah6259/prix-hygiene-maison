@@ -286,10 +286,15 @@
     return r.sort(cmp);
   }
 
+  // produit sans photo chez le magasin (169 produits Géant le 21/11/2026) : vignette aux couleurs du rayon, dessin + marque en grand
+  function sansPhoto(p) {
+    var f = famille(p.f) || [0, 0, 0, "#EEF2FF", "#2350E6", ICONE_SANS];
+    return '<span class="sans" style="--fa:' + f[3] + ';--fc:' + f[4] + '">' + svg(f[5], 56) + (p.m ? "<b>" + esc(p.m) + "</b>" : "") + "</span>";
+  }
   function carte(p) {
     var q = panier[p.id] ? panier[p.id].q : 0, rem = remise(p);
     var photo = p.i ? '<img src="' + esc(p.i) + '" alt="' + esc((p.m ? p.m + " " : "") + p.n) + '" loading="lazy" decoding="async" width="240" height="240">'
-      : '<span class="sans">' + svg((famille(p.f) || [0, 0, 0, 0, 0, ICONE_SANS])[5], 96) + '</span>';
+      : sansPhoto(p);
     var unite = p.pu ? '<span class="unite">' + dt(p.pu[0]) + " DT / " + esc((t("unite") || {})[p.pu[1]] || p.pu[1]) + '</span>' : "";
     var ou = '<span class="enseigne enseigne-' + esc(p.e) + '">' + esc(nomEnseigne(p.e)) + "</span>" +
       (p.nb && p.nb[1] > 1 ? esc(t("magasins", { n: iso(String(p.nb[0])), m: iso(String(p.nb[1])) })) : "");
@@ -555,7 +560,7 @@
       var img = ev.target; if (!img || img.tagName !== "IMG") return;
       if (img.closest(".photo")) {
         var c = img.closest(".carte"), p = c && trouver(c.getAttribute("data-id"));
-        img.outerHTML = '<span class="sans">' + svg(((p && famille(p.f)) || [0, 0, 0, 0, 0, ICONE_SANS])[5], 96) + "</span>";
+        img.outerHTML = p ? sansPhoto(p) : '<span class="sans">' + svg(ICONE_SANS, 56) + "</span>";
       } else if (img.closest(".hero-photos")) img.parentNode.remove();
       else if (img.closest(".rayon-tuile")) { var f = famille(img.closest(".rayon-tuile").getAttribute("data-f")); img.outerHTML = svg((f || [0, 0, 0, 0, 0, ICONE_SANS])[5], 48); }
     }, true);
