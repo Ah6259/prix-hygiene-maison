@@ -163,6 +163,8 @@ for (const [nom, w, h, mobile] of [["telephone", 390, 844, true], ["ordinateur",
   verif(await val(`(() => { const b = document.querySelector(".entete .btn-partager"); const r = b && b.getBoundingClientRect(); return !!b && r.width > 30 && r.top < 120; })()`), "bouton rond « Partager » dans l'en-tête (règle § 8)");
   await val(`window.__partage = null; window.__ouvertP = []; const so = navigator.share; navigator.share = d => { window.__partage = d; return Promise.resolve(); }; document.querySelector("#btn-partager").click(); navigator.share = so;`);
   verif((await val(`window.__partage && window.__partage.url`) || "") === "https://hygiene.clicvia.com/video/", "« Partager » : lien de la page vidéo dans le menu du téléphone");
+  verif(await val(`(() => { const t = (window.__partage && window.__partage.text) || ""; const v = (document.querySelector('meta[property="og:image"]').content.match(/og-image-(v\\d+)/) || [])[1];
+    return t.startsWith("Entretien et hygiène, livrés chez vous") && !!v && t.includes("hygiene.clicvia.com/?" + v); })()`), "« Partager » : nouveau slogan + adresse neuve ?vN = n° de l'image d'aperçu (WhatsApp garde l'ancien aperçu d'une adresse)");
   verif(await val(`[...document.querySelectorAll(".pied a")].some(a => a.getAttribute("href") === "video/")`), "pied : lien « Vidéo de présentation »");
   verif(await val(`document.querySelector('.btn-tel').href`) === "tel:+21699453345", "bouton téléphone 99 453 345");
   verif((await val(`document.querySelector('.btn-carte').href`) || "").includes("0x9df9049a18b3af98"), "lien de l'adresse de la boutique");
