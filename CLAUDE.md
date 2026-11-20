@@ -65,3 +65,12 @@ et modèle « suivi de prix » : dépôt privé projets-ahmed (dossier parent `_
 - Photos QUI BOUGENT dans le bandeau (règle du 16/10, oubliée puis faite le 21/11) : 2 rangées au PC, 1 au téléphone (`hm-defile`), pause au toucher ;
   contrôle complet n° 13. Robot commun « Relance de la publication » (`relance-pages.yml`, contrôle n° 12).
 - Ahmed (21/11) : PLUS de « livré par Tutto Clean » sous le logo ; au téléphone, boutons du bandeau pleine largeur et photos entières (30vw).
+
+## 20/11/2026 — retour des visiteurs : « trop d'écriture au téléphone », « couleurs vieilles »
+- Accueil allégé : titre court « Entretien et hygiène, livrés chez vous », plus de phrase sous le titre, boutons « Commander sur WhatsApp » /
+  « 🏪 La boutique », boutique sans paragraphe (« Tutto Clean vous livre »), promesses = 3 pastilles d'un mot au téléphone (le détail #maj
+  n'apparaît qu'en cas de panne : classe `panne`), plus de sous-titres sous « Nos rayons » / « Promotions », QR compact (« Partagez le site »),
+  pied de page en une phrase. Même chose en arabe (ar/ refait par `node tools/construire_ar.mjs`).
+- Couleurs modernes : turquoise / menthe sur fond clair (bandeau clair au lieu du marine ; boutons d'action #0D9488 ; promos rose #F43F5E ;
+  encre #0F3B47). Les noms des variables CSS sont gardés (`--orange` = couleur des boutons). Versions : style.css 20261121m, app.js 20261121j,
+  `CACHE_VERSION` 3. Image d'aperçu (og-image-v3) et logo encore aux anciennes couleurs : à refaire si Ahmed le veut (nouveau nom de fichier).
