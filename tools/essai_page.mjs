@@ -37,7 +37,7 @@ writeFileSync(join(dossier, "data", "accueil.json"), JSON.stringify({ date: "202
   produits: produits.slice(0, 24).map(({ u, ...p }) => p) }));
 
 // ---------- faux carnet Tutto Clean (jamais le vrai : l'adresse du carnet est remplacée dans la copie du site)
-for (const page of ["index.html", "tutto-clean/index.html"]) {
+for (const page of ["index.html", "ar/index.html", "tutto-clean/index.html", "commandes/index.html"]) {   // jamais le vrai carnet pendant un essai
   const f = join(dossier, page);
   writeFileSync(f, readFileSync(f, "utf8").replace(/<meta name="hm-api" content="[^"]*">/, '<meta name="hm-api" content="/__tutto">'));
 }
@@ -260,18 +260,19 @@ for (const [nom, w, h, mobile] of [["telephone", 390, 844, true], ["ordinateur",
   verif(await val(`document.documentElement.scrollWidth <= innerWidth`), "rien ne dépasse de l'écran (après les essais)");
 
   // arabe
-  await val(`document.querySelector("#btn-langue").click()`); await pause(500);
+  await val(`document.querySelector("#btn-langue").click()`); await pause(1800);
   verif(await val(`document.documentElement.dir === "rtl" && document.documentElement.lang === "ar"`), "arabe : page de droite à gauche");
+  verif(await val(`document.title.includes("أسعار") && document.querySelector('link[rel=canonical]').href.endsWith("/ar/")`), "arabe : titre arabe et adresse propre /ar/ (une adresse par langue)");
   verif(await val(`document.querySelector("h1").textContent.includes("أسعار")`), "arabe : titre traduit");
-  verif(await val(`location.search.includes("lang=ar")`), "arabe : adresse ?lang=ar");
+  verif(await val(`location.pathname === "/ar/"`), "arabe : adresse /ar/");
   verif(await val(`document.querySelector("#qr-image").src.endsWith("hygiene-ar.svg")`), "arabe : QR code de la page arabe");
   verif(await val(`document.documentElement.scrollWidth <= innerWidth`), "arabe : rien ne dépasse de l'écran");
   verif(!(await val(chevauche)), "arabe : le nom du site n'est pas coupé par les boutons");
   verif(await val(`getComputedStyle(document.querySelector(".badge-promo") || document.body).direction`) !== "rtl" || !(await val(`!!document.querySelector(".badge-promo")`)), "arabe : remise écrite « −33 % » (de gauche à droite)");
   await val(`window.scrollTo(0, 0)`); await pause(200);
   await capture(`${nom}-arabe`);
-  await val(`document.querySelector("#btn-langue").click()`); await pause(300);
-  verif(await val(`document.documentElement.dir === "ltr"`), "retour au français");
+  await val(`document.querySelector("#btn-langue").click()`); await pause(1800);
+  verif(await val(`document.documentElement.dir === "ltr" && location.pathname === "/"`), "retour au français (adresse /)");
 }
 // ---------- Espace Tutto Clean (page privée), au téléphone
 console.log("\n== Espace Tutto Clean (390 px)");

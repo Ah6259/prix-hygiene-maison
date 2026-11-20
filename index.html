@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fr" dir="ltr" translate="no">
+<html lang="fr" dir="ltr" translate="no" data-langue-fixe="fr">
 <head>
 <meta charset="utf-8">
 <meta name="google" content="notranslate">
@@ -8,9 +8,12 @@
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="hm-api" content="https://api-hygiene.clicvia.com">
 <meta name="robots" content="noai, noimageai">
-<title>Prix des produits d'entretien et d'hygiène en Tunisie — Prix Hygiène &amp; Maison</title>
+<title>Prix entretien et hygiène en Tunisie, livrés chez vous</title>
 <meta name="description" content="Comparez gratuitement les prix des produits d'entretien, de nettoyage et d'hygiène chez Carrefour et Géant, et commandez-les livrés partout en Tunisie.">
 <link rel="canonical" href="https://hygiene.clicvia.com/">
+<link rel="alternate" hreflang="fr" href="https://hygiene.clicvia.com/">
+<link rel="alternate" hreflang="ar" href="https://hygiene.clicvia.com/ar/">
+<link rel="alternate" hreflang="x-default" href="https://hygiene.clicvia.com/">
 <link rel="icon" type="image/svg+xml" href="assets/icons/icon.svg?v=2">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png?v=2">
 <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png?v=2">
@@ -233,6 +236,7 @@
       <label><span data-t="c-gouv">Gouvernorat</span><select name="gouv" id="c-gouv" required></select></label>
       <label><span data-t="c-adresse">Adresse de livraison</span><textarea name="adresse" rows="2" autocomplete="street-address" required maxlength="200"></textarea></label>
       <label><span data-t="c-note">Remarque (facultatif)</span><input name="note" maxlength="160"></label>
+      <input type="text" name="_gotcha" class="piege" tabindex="-1" autocomplete="off" aria-hidden="true">
     </fieldset>
     <p class="erreur" id="erreur-commande" role="alert" hidden></p>
     <button type="button" class="btn-envoyer" id="btn-envoyer">

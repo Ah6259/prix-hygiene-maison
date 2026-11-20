@@ -295,3 +295,4 @@ body.a-panier main{padding-bottom:84px}
 .pied .marque-pied b .et{color:var(--orange)}
 .logo img{border-radius:12px}
 @media (max-width:440px){.bandeau-haut .infos .masque-petit{display:none}}
+.piege{position:absolute!important;left:-9999px!important;width:1px;height:1px;opacity:0}

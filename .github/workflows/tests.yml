@@ -26,6 +26,9 @@ jobs:
         run: |
           pip install --quiet pyyaml
           python -c "import yaml,glob; [yaml.safe_load(open(f)) for f in glob.glob('.github/workflows/*.yml')]; print('YAML ok')"
+      - name: Page arabe a jour (une adresse par langue)
+        run: |
+          node tools/construire_ar.mjs --verifier
       - name: Tests du robot
         run: |
           python tools/test_robot.py

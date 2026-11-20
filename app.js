@@ -175,6 +175,11 @@
     remplirGouvs(); afficherComment(); afficherFamilles(); afficherAccueil(); afficherMaj(); afficher(); afficherPanier();
   }
   function changerLangue() {
+    if (document.documentElement.getAttribute("data-langue-fixe")) {   // une adresse par langue : on ouvre l'autre page
+      try { localStorage.setItem(CLE_LANGUE, langue === "ar" ? "fr" : "ar"); } catch (e) { /* sans gravité */ }
+      (window.allerVers || function (a) { location.href = a; })(langue === "ar" ? "/" : "/ar/");
+      return;
+    }
     langue = langue === "ar" ? "fr" : "ar";
     try { localStorage.setItem(CLE_LANGUE, langue); } catch (e) { /* stockage refusé : sans gravité */ }
     var u = new URL(location.href);
@@ -418,6 +423,7 @@
   }
   function envoyer() {
     var form = $("form-commande"), err = $("erreur-commande");
+    if (form._gotcha && form._gotcha.value) return;   // piège anti-robots rempli : rien n'est envoyé ni noté
     var f = { nom: form.nom.value.trim(), tel: form.tel.value.trim(), gouv: form.gouv.value, adresse: form.adresse.value.trim(), note: form.note.value.trim() };
     err.style.color = "";
     if (!nbArticles()) { err.textContent = t("errVide"); err.hidden = false; return; }
@@ -443,7 +449,7 @@
   // Il partage un LIEN : la page vidéo de présentation (PAGE_VIDEO, dès qu'elle existe) + l'adresse du site.
   var PAGE_VIDEO = "";
   function partager() {
-    var site = "https://hygiene.clicvia.com/" + (langue === "ar" ? "?lang=ar" : ""), lien = PAGE_VIDEO || site;
+    var site = "https://hygiene.clicvia.com/" + (langue === "ar" ? "ar/" : ""), lien = PAGE_VIDEO || site;
     var texte = (langue === "ar" ? "أسعار مواد التنظيف والنظافة، تصلك إلى بيتك — Tutto Clean\nالموقع: " : "Les prix de l'entretien et de l'hygiène, livrés chez vous — Tutto Clean\nLe site : ") + site;
     if (window.goatcounter && goatcounter.count) { try { goatcounter.count({ path: "partage/accueil", title: "Partage", event: true }); } catch (e) { /* compteur absent */ } }
     function whatsapp() { window.open("https://wa.me/?text=" + encodeURIComponent(PAGE_VIDEO ? texte + "\n" + PAGE_VIDEO : texte), "_blank", "noopener"); }
@@ -558,9 +564,9 @@
   }
 
   function demarrer() {
-    var u = new URLSearchParams(location.search);
-    var l = u.get("lang"); if (!l) { try { l = localStorage.getItem(CLE_LANGUE); } catch (e) { l = null; } }
-    langue = l === "ar" ? "ar" : "fr";
+    var u = new URLSearchParams(location.search), fixe = document.documentElement.getAttribute("data-langue-fixe");
+    if (fixe === "fr" && u.get("lang") === "ar") { location.replace("/ar/" + location.hash); return; }   // ancien lien ?lang=ar
+    langue = fixe === "ar" ? "ar" : fixe === "fr" ? "fr" : (u.get("lang") === "ar" ? "ar" : "fr");
     brancher();
     appliquerLangue();
     fetch(API_TUTTO + "/prix", { cache: "no-cache" }).then(function (r) { return r.ok ? r.json() : { produits: [] }; }).then(function (d) {
