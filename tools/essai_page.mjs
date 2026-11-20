@@ -31,6 +31,8 @@ produits[1].i = "assets/og-image-v3.jpg";   // photo pas carrée (1200 × 630) :
 const familles = {}; produits.forEach(p => { familles[p.f] = (familles[p.f] || 0) + 1; });
 const rayons = {}; produits.forEach(p => { const r = rayons[p.f] = rayons[p.f] || { n: 0, s: {}, i: null }; r.n++; r.s[p.s] = (r.s[p.s] || 0) + 1; });
 const promos = produits.filter(p => p.r).map(({ u, ...p }) => p);
+const IMAGES_ESSAI = ["assets/icons/icon-512.png", "assets/icons/icon-192.png", "assets/icons/apple-touch-icon.png", "assets/og-image-v3.jpg", "assets/boutique-carte.webp", "assets/qr/hygiene-fr.png"];
+Object.values(rayons).forEach((r, n) => { r.i = IMAGES_ESSAI[n % IMAGES_ESSAI.length]; });   // photos du bandeau qui bougent
 mkdirSync(join(dossier, "data"), { recursive: true });
 writeFileSync(join(dossier, "data", "produits.json"), JSON.stringify({ date: "2026-11-20", produits }));
 writeFileSync(join(dossier, "data", "accueil.json"), JSON.stringify({ date: "2026-11-20", total: produits.length, familles, rayons, promos,
@@ -134,6 +136,10 @@ for (const [nom, w, h, mobile] of [["telephone", 390, 844, true], ["ordinateur",
   await cmd("Page.navigate", { url }); await pause(1500);
   verif(!demandes.includes("/data/produits.json"), "accueil léger : liste complète pas chargée avant le 1er geste");
   verif(await val(`document.querySelector("#produits").hidden`), "accueil : pas de liste complète d'office");
+  verif(await val(`(() => { const r = document.querySelector("#hero-photos .r1"); if (!r) return false; const a = getComputedStyle(r).animationName;
+    const copies = r.querySelectorAll('.tuile[aria-hidden="true"]').length, toutes = r.querySelectorAll(".tuile").length;
+    return a && a !== "none" && copies * 2 === toutes && toutes >= 4; })()`), "photos du bandeau qui BOUGENT (défilement en boucle, copies aria-hidden)");
+  verif(await val(`document.documentElement.scrollWidth <= innerWidth`), "photos qui bougent : rien ne dépasse de l'écran");
   verif(await val(`(() => { const i = document.querySelector("#qr-image"); return !!i && i.complete && i.naturalWidth > 0 && i.src.endsWith("hygiene-fr.svg") && document.querySelector("#qr-telecharger").href.endsWith("hygiene-fr.png"); })()`), "QR code à partager (image affichée + téléchargement)");
   verif(await val(`(() => { const b = document.querySelector("#boutique"), h = document.querySelector(".hero"); return !!b && !!h && b.getBoundingClientRect().top > h.getBoundingClientRect().top && b.getBoundingClientRect().top < document.querySelector("#t-rayons").getBoundingClientRect().top; })()`), "accueil : la boutique Tutto Clean juste après le bandeau, avant les rayons");
   verif((await val(`document.querySelector('.hero .btn-orange').href`) || "").startsWith("https://wa.me/21699453345"), "bandeau : « Commander chez Tutto Clean »");
@@ -279,7 +285,8 @@ for (const [nom, w, h, mobile] of [["telephone", 390, 844, true], ["ordinateur",
   verif(await val(`getComputedStyle(document.querySelector(".badge-promo") || document.body).direction`) !== "rtl" || !(await val(`!!document.querySelector(".badge-promo")`)), "arabe : remise écrite « −33 % » (de gauche à droite)");
   await val(`window.scrollTo(0, 0)`); await pause(200);
   await capture(`${nom}-arabe`);
-  await val(`document.querySelector("#btn-langue").click()`); await pause(1800);
+  await val(`document.querySelector("#btn-langue").click()`);
+  for (let i = 0; i < 20 && !(await val(`document.readyState === "complete" && location.pathname === "/" && document.documentElement.dir === "ltr"`)); i++) await pause(300);   // attendre le rechargement
   verif(await val(`document.documentElement.dir === "ltr" && location.pathname === "/"`), "retour au français (adresse /)");
 }
 // ---------- Espace Tutto Clean (page privée), au téléphone

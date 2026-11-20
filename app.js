@@ -240,9 +240,17 @@
     if (!accueil) return;
     var ray = accueil.rayons || {};
     $("rayons-grille").closest("section").hidden = !Object.keys(ray).length;   // anciennes données sans rayons : partie cachée, jamais vide
-    // photos du bandeau : 4 rayons différents, de vraies photos de produits
-    var photos = ["linge", "papier", "cheveux", "vaisselle", "corps", "javel", "bouche", "soins"].map(function (f) { return ray[f] && ray[f].i; }).filter(Boolean).slice(0, 4);
-    $("hero-photos").innerHTML = photos.map(function (i) { return '<div><img src="' + esc(i) + '" alt="" width="200" height="200" decoding="async"></div>'; }).join("");
+    // photos du bandeau QUI BOUGENT (règle commune « des photos qui bougent », 16/10/2026) : une photo par rayon + celles des promotions,
+    // deux rangées qui défilent en sens contraire (PC : 4 visibles ; téléphone : une rangée, 2 visibles) ; chaque rangée est doublée
+    // (copie aria-hidden) pour une boucle sans trou ; pause sous la souris ou au toucher ; immobile si « réduire les animations ».
+    var photos = FAMILLES.map(function (f) { return ray[f[0]] && ray[f[0]].i; }).concat((accueil.promos || []).map(function (p) { return p.i; }))
+      .filter(function (x, n, l) { return x && l.indexOf(x) === n; }).slice(0, 16);
+    var moitie = Math.ceil(photos.length / 2), r1 = photos.slice(0, moitie), r2 = photos.slice(moitie).concat(photos.slice(0, Math.max(0, moitie - (photos.length - moitie))));
+    function rangee(liste, classe) {
+      var tuile = function (i, copie) { return '<div class="tuile"' + (copie ? ' aria-hidden="true"' : "") + '><img src="' + esc(i) + '" alt="" width="200" height="200" decoding="async"' + (copie ? ' loading="lazy"' : "") + "></div>"; };
+      return '<div class="rangee ' + classe + '">' + liste.map(function (i) { return tuile(i, false); }).join("") + liste.map(function (i) { return tuile(i, true); }).join("") + "</div>";
+    }
+    $("hero-photos").innerHTML = photos.length ? rangee(r1, "r1") + rangee(r2, "r2") : "";
     $("rayons-grille").innerHTML = FAMILLES.filter(function (f) { return ray[f[0]]; }).map(function (f) {
       var r = ray[f[0]];
       return '<button type="button" class="rayon-tuile" data-f="' + f[0] + '" style="--fa:' + f[3] + ';--fc:' + f[4] + '"><span class="img">' +
@@ -568,6 +576,9 @@
     }, true);
     GESTES.forEach(function (g) { window.addEventListener(g, surPremierGeste, { capture: true, passive: true }); });
     window.addEventListener("scroll", surPremierGeste, { passive: true });
+    // photos qui bougent : pause au toucher (la souris : CSS :hover)
+    $("hero-photos").addEventListener("touchstart", function () { $("hero-photos").classList.add("pause"); }, { passive: true });
+    $("hero-photos").addEventListener("touchend", function () { setTimeout(function () { $("hero-photos").classList.remove("pause"); }, 1500); }, { passive: true });
   }
 
   function demarrer() {
