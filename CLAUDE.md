@@ -14,7 +14,8 @@ et modèle « suivi de prix » : dépôt privé projets-ahmed (dossier parent `_
 - FR + AR (`?lang=ar`, bouton, choix gardé), nombres de gauche à droite en arabe, mode sombre, téléphone d'abord.
 - Accueil léger (règle § 60) : `data/accueil.json` (24 produits + nombres) tout de suite, `data/produits.json` au 1er geste.
 - Familles (13) : linge, vaisselle, maison, javel (et WC), desodorisant, accessoires, papier, bebe, feminine, corps, cheveux, bouche, soins.
-- Cache des téléphones : changer le `?v=` de style.css / app.js dans index.html à chaque modification (20261120a) ; `CACHE_VERSION` de sw.js.
+- Cache des téléphones : changer le `?v=` de style.css / app.js dans index.html à chaque modification (style.css 20261121m — aussi dans
+  tutto-clean/, video/, commandes/ —, app.js 20261121j) ; `CACHE_VERSION` de sw.js (3) ; puis `node tools/construire_ar.mjs` (page arabe).
 - GoatCounter : préfixe `/prix-hygiene-maison` (`assets/stats.js`), compteur commun ; clic « commande envoyée » compté comme événement.
 
 ## Tutto Clean (boutique de l'ami, 20/11/2026 : nom autorisé par Ahmed, prix SANS livraison)
@@ -74,3 +75,6 @@ et modèle « suivi de prix » : dépôt privé projets-ahmed (dossier parent `_
 - Couleurs modernes : turquoise / menthe sur fond clair (bandeau clair au lieu du marine ; boutons d'action #0D9488 ; promos rose #F43F5E ;
   encre #0F3B47). Les noms des variables CSS sont gardés (`--orange` = couleur des boutons). Versions : style.css 20261121m, app.js 20261121j,
   `CACHE_VERSION` 3. Image d'aperçu (og-image-v3) et logo encore aux anciennes couleurs : à refaire si Ahmed le veut (nouveau nom de fichier).
+- **En ligne le 20/11/2026** (PR #1 fusionnée dans `main`, vérifié sur https://hygiene.clicvia.com/ au téléphone : nouveau titre et couleurs).
+  Les essais attendent le titre arabe avec « النظافة » (`tools/essai_page.mjs`) : le changer aussi si le titre arabe change.
+- **Reprendre sur le PC** : dans le dossier du site, `git checkout main` puis `git pull` (la branche de la session en ligne est déjà fusionnée).

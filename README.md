@@ -7,6 +7,12 @@ nuit, et commande livrée par WhatsApp (+216 99 453 345), partout en Tunisie.
 - Chaque nuit (robot `maj-prix`) : prix relevés, photos ajoutées, site mis à jour, page essayée dans un navigateur.
 - À chaque envoi (robot `tests`) : tests du robot et de la page.
 
+## Travailler depuis le PC
+- Avant de commencer : `git checkout main` puis `git pull` (des changements sont faits aussi depuis le téléphone, en ligne).
+- Après une modification de la page : changer les `?v=` (style.css, app.js) et `CACHE_VERSION` de `sw.js`, puis
+  `node tools/construire_ar.mjs` (page arabe), `node tools/essai_page.mjs .` et `python tools/test_robot.py` (tout doit être vert).
+- Envoyer : `git add -A`, `git commit -m "…"`, `git push` ; le site est en ligne environ 1 minute après.
+
 ## Plan de continuité (si Claude n'est plus là)
 - Le site est sur GitHub Pages (gratuit) et ses robots tournent sur GitHub (dépôt public : gratuit). Rien ne dépend du PC.
 - Changer le numéro de la boutique : remplacer `21699453345` et `99 453 345` dans `index.html` et `app.js` (sur github.com, crayon ✏️).
