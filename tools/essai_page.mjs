@@ -23,13 +23,16 @@ for (let i = 0; i < 70; i++) {
   const f = FAM[i % FAM.length];
   produits.push({ id: `cf:${i}`, e: i % 3 ? "carrefour" : "geant", n: `Produit ${f} n° ${i}`, m: i === 5 ? "OMO" : `MARQUE${i % 7}`, f,
     q: `${(i % 4) + 1} L`, p: 2 + i * 0.5, r: i % 9 === 0 ? 3 + i * 0.5 : null, nb: i % 3 ? [12, 40] : [1, 1],
-    pu: [(2 + i * 0.5) / ((i % 4) + 1), "L"], i: i % 5 === 4 ? "assets/img/p/absente.webp" : null, u: "https://exemple.tn/p" + i });
+    pu: [(2 + i * 0.5) / ((i % 4) + 1), "L"], i: i % 5 === 4 ? "assets/img/p/absente.webp" : null, u: "https://exemple.tn/p" + i,
+    s: i % 2 ? "liquide" : "poudre" });
 }
 produits[5].n = "Lessive poudre OMO main 4kg";
 const familles = {}; produits.forEach(p => { familles[p.f] = (familles[p.f] || 0) + 1; });
+const rayons = {}; produits.forEach(p => { const r = rayons[p.f] = rayons[p.f] || { n: 0, s: {}, i: null }; r.n++; r.s[p.s] = (r.s[p.s] || 0) + 1; });
+const promos = produits.filter(p => p.r).map(({ u, ...p }) => p);
 mkdirSync(join(dossier, "data"), { recursive: true });
 writeFileSync(join(dossier, "data", "produits.json"), JSON.stringify({ date: "2026-11-20", produits }));
-writeFileSync(join(dossier, "data", "accueil.json"), JSON.stringify({ date: "2026-11-20", total: produits.length, familles,
+writeFileSync(join(dossier, "data", "accueil.json"), JSON.stringify({ date: "2026-11-20", total: produits.length, familles, rayons, promos,
   enseignes: { carrefour: { offres: 47, erreur: null, derniere_reussite: "2026-11-20" }, geant: { offres: 23, erreur: "délai", derniere_reussite: "2026-11-19" } },
   produits: produits.slice(0, 24).map(({ u, ...p }) => p) }));
 
@@ -43,11 +46,16 @@ const carnet = { maj: "2026-11-20T10:00:00Z", produits: [
   { id: "tc:propre1", n: "Savon noir artisanal", m: "TUTTO", f: "corps", q: "500 g", p: 4.5, s: true },
   { id: "cf:4", n: produits[4].n, m: produits[4].m, f: produits[4].f, q: produits[4].q, p: 9.9, s: false } ] };
 const BON_CODE = "tc-essai123";
+const commandesNotees = [];
 function fauxCarnet(req, res, chemin) {
   res.setHeader("Content-Type", "application/json");
   const bon = req.headers["x-code"] === BON_CODE;
   if (req.method === "GET" && chemin === "/__tutto/prix") return res.end(JSON.stringify({ ...carnet, produits: carnet.produits.filter(p => p.p != null) }));
   if (req.method === "POST" && chemin === "/__tutto/verifier") { res.statusCode = bon ? 200 : 403; return res.end(JSON.stringify({ ok: bon })); }
+  if (req.method === "POST" && chemin === "/__tutto/commande") {
+    let corps = ""; req.on("data", c => { corps += c; }); req.on("end", () => { commandesNotees.push(JSON.parse(corps)); res.end('{"ok":true}'); });
+    return;
+  }
   if (req.method === "POST" && chemin === "/__tutto/prix") {
     let corps = ""; req.on("data", c => { corps += c; }); req.on("end", () => {
       if (!bon) { res.statusCode = 403; return res.end('{"erreur":"code"}'); }
@@ -99,7 +107,7 @@ const capture = async nom => { const r = await cmd("Page.captureScreenshot", { f
 
 // « Comment fonctionne ce site ? » : repère dans app.js -> mot attendu dans l'explication (règle § 44)
 const FONCTIONS = [["sonRecherche", "Recherche"], ["data-plus", "Ajouter"], ["numeroCommande", "numéro de commande"], ["pu[0]", "Prix au litre"],
-  ["badge-promo", "Promotion"], ["panne", "Panne d'un magasin"], ["hm_client", "Vos données"], ["nb[1]", "nombre de magasins"], ["famille(", "Les familles"]];
+  ["badge-promo", "Promotion"], ["panne", "Panne d'un magasin"], ["hm_client", "Vos données"], ["nb[1]", "nombre de magasins"], ["famille(", "Les rayons"], ["marquesChoisies", "Filtres"], ["noterCommande", "numéro de commande, le gouvernorat et les produits"]];
 const appjs = readFileSync(join(source, "app.js"), "utf8");
 for (const [repere] of FONCTIONS) verif(appjs.includes(repere), `repère présent dans app.js : ${repere}`);
 
@@ -122,6 +130,7 @@ for (const [nom, w, h, mobile] of [["telephone", 390, 844, true], ["ordinateur",
   verif(await val(`document.querySelector('.btn-wa').href`) === "https://wa.me/21699453345", "bouton WhatsApp de la boutique");
   verif(await val(`document.querySelector('.btn-tel').href`) === "tel:+21699453345", "bouton téléphone 99 453 345");
   verif((await val(`document.querySelector('.btn-carte').href`) || "").includes("0x9df9049a18b3af98"), "lien de l'adresse de la boutique");
+  verif(await val(`(() => { const a = document.querySelector('.boutique-carte'); return !!a && a.href.includes("0x9df9049a18b3af98") && a.querySelector('img').src.includes('boutique-carte'); })()`), "carte de la boutique (clic = Google Maps)");
   verif(await val(`[...document.querySelectorAll('.pied a')].some(a => a.href === "https://clicvia.com/confidentialite/") && [...document.querySelectorAll('.pied a')].some(a => a.href === "https://clicvia.com/conditions/")`), "pied : Confidentialité et Conditions (§ 58)");
   verif(await val(`!document.body.textContent.match(/pourcentage|commission/i)`), "rien sur la commission (consigne d'Ahmed)");
   verif(await val(`document.documentElement.scrollWidth <= innerWidth`), "rien ne dépasse de l'écran (accueil)");
@@ -138,6 +147,32 @@ for (const [nom, w, h, mobile] of [["telephone", 390, 844, true], ["ordinateur",
   const pap = await val(`[...document.querySelectorAll("#grille .carte")].length`);
   verif(pap === produits.filter(p => p.f === "papier").length, `famille Papier : ${pap} produits, tous de la famille`);
   verif(await val(`document.querySelector('#familles [data-f="papier"]').getAttribute("aria-pressed")`) === "true", "bouton de famille marqué choisi");
+  verif(await val(`document.querySelector("#vue-accueil").hidden && !document.querySelector("#fil").hidden`), "rayon choisi : accueil caché, fil d'Ariane « Accueil › rayon »");
+  // sous-rayons (comme Carrefour)
+  verif(await val(`document.querySelectorAll("#sous-rayons .puce").length`) === 3, "sous-rayons : « Tout le rayon » + 2 sous-rayons");
+  await val(`document.querySelector('#sous-rayons [data-s="poudre"]').click()`); await pause(300);
+  const nbPoudre = await val(`document.querySelectorAll("#grille .carte").length`);
+  verif(nbPoudre === produits.filter(p => p.f === "papier" && p.s === "poudre").length, `sous-rayon choisi : ${nbPoudre} produits, tous de ce sous-rayon`);
+  verif((await val(`document.querySelector("#fil").textContent`)).includes("Lessive en poudre"), "fil d'Ariane : rayon › sous-rayon");
+  await val(`document.querySelector('#fil [data-aller="accueil"]').click()`); await pause(300);
+  verif(!(await val(`document.querySelector("#vue-accueil").hidden`)), "« Accueil » du fil d'Ariane : retour à l'accueil");
+  // accueil : tuiles des rayons et promotions
+  verif(await val(`document.querySelectorAll("#rayons-grille .rayon-tuile").length`) === 13, "accueil : 13 tuiles de rayons");
+  verif(await val(`document.querySelectorAll("#defile-promos .carte").length`) === promos.length, "accueil : carrousel des promotions");
+  await val(`document.querySelector('#rayons-grille [data-f="bebe"]').click()`); await pause(400);
+  verif(await val(`[...document.querySelectorAll("#grille .carte")].length`) === produits.filter(p => p.f === "bebe").length, "tuile « Bébé » : les produits du rayon");
+  await val(`document.querySelector("#voir-promos").click()`); await pause(400);
+  verif(await val(`[...document.querySelectorAll("#grille .carte")].every(c => c.querySelector(".badge-promo"))`), "« Voir tout » des promotions : seulement des promotions");
+  // filtre des marques et du magasin
+  await val(`document.querySelector('#familles [data-f=""]').click()`); await pause(300);
+  await val(`document.querySelector("#btn-marques").click()`); await pause(500);
+  await val(`(() => { const c = [...document.querySelectorAll("#liste-marques input")].find(x => x.value === "MARQUE3"); c.click(); })()`); await pause(400);
+  verif(await val(`[...document.querySelectorAll("#grille .carte .marque")].every(m => m.textContent === "MARQUE3")`) && (await val(`document.querySelectorAll("#grille .carte").length`)) === produits.filter(p => p.m === "MARQUE3").length,
+    "filtre marque : seulement MARQUE3, tous ses produits");
+  await val(`document.querySelector("#marques-effacer").click(); document.querySelector("#marques-ok").click()`); await pause(300);
+  await val(`(() => { const s = document.querySelector("#magasin"); s.value = "geant"; s.dispatchEvent(new Event("change")); })()`); await pause(300);
+  verif(await val(`[...document.querySelectorAll("#grille .carte .ou")].every(o => o.textContent.includes("Géant"))`), "filtre magasin : seulement Géant");
+  await val(`(() => { const s = document.querySelector("#magasin"); s.value = ""; s.dispatchEvent(new Event("change")); })()`); await pause(300);
   await val(`document.querySelector('#familles [data-f=""]').click()`); await pause(300);
   // « Voir plus »
   await val(`document.querySelector('#btn-plus').click()`); await pause(300);
@@ -180,6 +215,10 @@ for (const [nom, w, h, mobile] of [["telephone", 390, 844, true], ["ordinateur",
   verif(/Commande HM-\d{6}-[A-Z0-9]{4}/.test(msg), "message : numéro de commande HM-AAMMJJ-XXXX");
   verif(msg.includes("2 × ") && msg.includes("Sami Test") && msg.includes("Sfax") && msg.includes("Rue de l'essai"), "message : quantités, nom, gouvernorat, adresse");
   verif(msg.includes("votre prix et les frais de livraison"), "message : demande le prix de la boutique et la livraison");
+  await pause(400);
+  const notee = commandesNotees[commandesNotees.length - 1] || {};
+  verif(notee.c && msg.includes(notee.c) && notee.g === "Sfax" && notee.l && notee.l.length >= 1, "commande notée dans le carnet (même numéro, gouvernorat, produits)");
+  verif(!JSON.stringify(notee).match(/Sami|22 333 444|Rue de l/), "carnet : ni nom, ni téléphone, ni adresse du client");
   await val(`document.querySelector("#panier").close()`);
   // Tutto Clean : son bouton, son produit propre, le panier au prix de la boutique
   await val(`document.querySelector('#familles [data-f="__tutto"]').click()`); await pause(500);

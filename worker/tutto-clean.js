@@ -74,6 +74,36 @@ export default {
       await env.TUTTO.put("prix", JSON.stringify(d));
       return json(req, { ok: true, nombre: d.produits.length });
     }
+    // ---- commandes (21/11/2026, Ahmed : « mon ami gère les commandes, moi je veux juste pouvoir les voir si je veux »)
+    // Le site note chaque commande PRÉPARÉE (le client ouvre WhatsApp ; on ne sait pas s'il l'envoie) : numéro, date, gouvernorat,
+    // produits, total. JAMAIS le nom, le téléphone ni l'adresse du client (données personnelles : décision d'Ahmed à prendre).
+    if (req.method === "POST" && url.pathname === "/commande") {
+      let b;
+      try { b = JSON.parse(await req.text()); } catch { return json(req, { erreur: "illisible" }, 400); }
+      const num = texte(b.c, 20);
+      if (!/^HM-\d{6}-[A-Z0-9]{4}$/.test(num)) return json(req, { erreur: "numéro" }, 400);
+      const lignes = (Array.isArray(b.l) ? b.l : []).slice(0, 60).map(l => ({
+        n: texte(l.n, 120), m: texte(l.m, 40), qt: texte(l.qt, 40), q: Math.max(1, Math.min(99, parseInt(l.q, 10) || 1)),
+        p: Number(l.p) > 0 && Number(l.p) < 10000 ? Math.round(Number(l.p) * 1000) / 1000 : null, e: texte(l.e, 12), tc: !!l.tc }));
+      if (!lignes.length) return json(req, { erreur: "vide" }, 400);
+      const quand = new Date().toISOString();
+      const cmd = { c: num, d: quand, g: texte(b.g, 30), l: lignes, t: Math.round(lignes.reduce((s, l) => s + (l.p || 0) * l.q, 0) * 1000) / 1000, langue: b.lang === "ar" ? "ar" : "fr" };
+      await env.TUTTO.put("cmd:" + quand.slice(0, 10) + ":" + num, JSON.stringify(cmd), { expirationTtl: 60 * 60 * 24 * 400 });
+      return json(req, { ok: true });
+    }
+    if (req.method === "GET" && url.pathname === "/commandes") {
+      const c = (req.headers.get("X-Code") || "").trim();
+      if (c.length < 6 || (await sha256(c)) !== env.ADMIN_SHA256) return json(req, { erreur: "code" }, 403);
+      const cles = [];
+      let curseur;
+      do {
+        const l = await env.TUTTO.list({ prefix: "cmd:", cursor: curseur });
+        cles.push(...l.keys.map(k => k.name)); curseur = l.list_complete ? null : l.cursor;
+      } while (curseur && cles.length < 3000);
+      const recents = cles.sort().reverse().slice(0, 400);
+      const cmds = (await Promise.all(recents.map(k => env.TUTTO.get(k, "json")))).filter(Boolean);
+      return json(req, { total: cles.length, commandes: cmds });
+    }
     return json(req, { erreur: "adresse inconnue" }, 404);
   }
 };

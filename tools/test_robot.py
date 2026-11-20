@@ -31,7 +31,8 @@ for nom, attendu in [
 ]:
     ok(famille(nom) == attendu, f"{nom!r} -> {attendu} (lu : {famille(nom)})")
 print("Pièges : jamais un produit d'entretien")
-for nom in ["Biscuit fourré chocolat 200g", "Lait infantile 1er âge 400g", "Biberon 250ml", "Jouet de bain", "Coffret cadeau parfum", "Fer à repasser vapeur", ""]:
+for nom in ["Biscuit fourré chocolat 200g", "Lait infantile 1er âge 400g", "Biberon 250ml", "Jouet de bain", "Coffret cadeau parfum", "Fer à repasser vapeur", "",
+            "Brosse à cheveux", "Brosse cheveux courbée", "Pinces à cheveux dorés", "Vernis à ongles rouge"]:   # vus sur le site le 20/11/2026 : pas d'entretien ni d'hygiène
     ok(famille(nom) is None, f"{nom!r} -> à vérifier (lu : {famille(nom)})")
 print("Le rayon confirme, il ne décide pas")
 ok(famille("Shampooing doux 250ml", "linge") is None, "shampooing dans le rayon lessive = à vérifier")

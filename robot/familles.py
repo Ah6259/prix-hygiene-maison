@@ -35,7 +35,7 @@ FAMILLES = [
 HORS = (r"\bbiscuits?\b|\bchocolat|\bgateau|\bboisson|\bjus\b|\blait (?:demi|entier|uht|infantile|croissance|1er|2eme|bebe)|\bpetits? pots?\b|"
         r"\bcereales?\b|\bcompote|\bjouet|\bpeluche|\bbiberon|\btetine|\baspirateur|\bfer a repasser|\bmachine a laver\b|\blave[- ]linge\b|\blave[- ]vaisselle (?:encastrable|pose libre|\d+ couverts)|\binverter\b|\brefrigerateur|"
         r"\bpoussette|\bsiege auto|\bvetements?\b|\bpyjama|\bbody\b|\bchaussettes?|\bcoffret cadeau|"
-        r"\badultes?\b|\beau de (?:toilette|parfum|cologne)|\bparfums? (?:homme|femme|pour (?:homme|femme))|\bgants? de toilette|\bcoloration|\bteinture|\bcirage")
+        r"\badultes?\b|\beau de (?:toilette|parfum|cologne)|\bparfums? (?:homme|femme|pour (?:homme|femme))|\bgants? de toilette|\bcoloration|\bteinture|\bcirage|\bbrosses? (?:a |pour |de )?cheveux|\bpeignes?\b|\bpinces? a cheveux|\bbarrettes?\b|\belastiques?\b|\bchouchous?\b|\bserre[- ]tetes?\b|\bvernis\b|\bmaquillage|\bfond de teint|\brouge a levres|\bmascara")
 
 # Rayon du magasin -> familles qu'il peut contenir (confirmation seulement ; vide = pas de contrôle)
 RAYON_FAMILLES = {
@@ -43,6 +43,42 @@ RAYON_FAMILLES = {
     "papier": {"papier"}, "bebe": {"bebe", "corps", "cheveux"}, "feminine": {"feminine"},
     "hygiene": {"corps", "cheveux", "bouche", "soins", "feminine", "papier"}, "": set(),
 }
+
+
+# SOUS-RAYONS (20/11/2026, Ahmed : « le classement doit ressembler à celui de Carrefour pour trouver vite un produit ») : dans chaque
+# famille, le premier sous-rayon dont un mot est dans le nom ; sinon « autres » (jamais deviné autrement).
+SOUS_RAYONS = {
+    "linge": [("capsules", r"capsules?|pods|doses?|tablettes?"), ("assouplissant", r"assouplissant|adoucissant|softener"),
+              ("liquide", r"liquide|gel\b|\bgel "), ("poudre", r"poudre|powder|\bmain\b|\bmains\b"), ("detachant", r"detachant|anti[- ]?taches?|blanchisseur|vanish")],
+    "vaisselle": [("lave-vaisselle", r"lave[- ]?vaisselle|tablettes?|pastilles?|capsules?|sel regenerant|liquide de rincage|finish"),
+                  ("main", r"vaisselle|dishwash|pril|fairy")],
+    "maison": [("multi-usages", r"multi[- ]?(?:usages?|surfaces?)|tout usage"), ("sols", r"\bsols?\b|carrelage|parquet"),
+               ("vitres-meubles", r"vitres?|meubles?|bois|encaustique"), ("cuisine-salle-de-bain", r"cuisine|salle de bain|degraissant|four|anti[- ]?calcaire|recurer|creme a"),
+               ("desinfectants", r"desinfect|antibacter|bicarbonate|vinaigre"), ("insecticides", r"insect|moustique|cafard|blatte|fourmi|raid|baygon"), ("savon-menage", r"savon")],
+    "javel": [("javel", r"javel|chlore"), ("wc", r"\bwc\b|cuvette|toilette|bloc"), ("deboucheurs", r"deboucheur|canalisation|detartrant")],
+    "desodorisant": [("aerosols", r"aerosol|spray|\b300 ?ml|\b250 ?ml"), ("diffuseurs", r"diffuseur|recharge|bougie|electrique|parfum d"),
+                     ("absorbeurs", r"absorbeur|humidite")],
+    "accessoires": [("eponges", r"eponge|tampons?|grattoir|recurer"), ("gants", r"gants?"), ("serpilleres", r"serpill|lavette|microfibre|chiffon|chamoisine"),
+                    ("balais", r"balai|raclette|pelle|seau|frange"), ("sacs", r"sacs?|poubelle"), ("cuisine", r"film|aluminium|\balu\b|cuisson")],
+    "papier": [("toilette", r"toilette|hygienique|\bwc\b"), ("essuie-tout", r"essuie|absorbant|cuisine"), ("mouchoirs", r"mouchoir|facial")],
+    "bebe": [("couches", r"couches?|culottes?|pants|\bt\d\b|taille"), ("lingettes", r"lingettes?"), ("toilette-bebe", r".")],
+    "feminine": [("serviettes", r"serviettes?|nuit|ultra|maxi"), ("protege-slips", r"protege"), ("tampons", r"tampons?"), ("intime", r"intime|lingettes?")],
+    "corps": [("gel-douche", r"douche|shower|bain moussant|creme de douche"), ("savon-liquide", r"savon liquide|lavant|lave[- ]mains|creme lavante|liquid"),
+              ("savon", r"savon|soap|pain")],
+    "cheveux": [("apres-shampooing", r"apres[- ]shamp|conditioner|demelant"), ("masques-soins", r"masque|soin|serum|huile|creme"),
+                ("coiffants", r"gel coiffant|laque|cire|mousse coiffante|coiffant"), ("shampooing", r"shamp")],
+    "bouche": [("brosses", r"brosses?|brossette"), ("bain-de-bouche", r"bain de bouche|fil|interdent|rince"), ("dentifrice", r"dentifrice|.")],
+    "soins": [("deodorants", r"deo|anti[- ]?transpirant|roll|stick"), ("rasoirs", r"rasoirs?|lames?|recharges?"),
+              ("rasage", r"raser|rasage|barbe"), ("coton", r"coton|disques?|batonnets?")],
+}
+
+
+def sous_rayon(nom, fam):
+    n = norm(nom)
+    for s, pat in SOUS_RAYONS.get(fam, []):
+        if re.search(pat, n):
+            return s
+    return "autres"
 
 
 # Cas précis lus dans l'étude du 20/11/2026 (vrais noms des magasins), décidés AVANT la règle générale

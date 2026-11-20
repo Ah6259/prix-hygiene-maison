@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="fr" translate="no">
+<head>
+<meta charset="utf-8">
+<meta name="google" content="notranslate">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://api-hygiene.clicvia.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="hm-api" content="https://api-hygiene.clicvia.com">
+<meta name="robots" content="noindex, nofollow, noai, noimageai">
+<title>Commandes — Hygiène &amp; Maison (privé)</title>
+<link rel="icon" type="image/svg+xml" href="../assets/icons/icon.svg">
+<meta name="theme-color" content="#0D1B3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap">
+<link rel="stylesheet" href="../style.css?v=20261121a">
+<link rel="stylesheet" href="commandes.css?v=20261121a">
+</head>
+<body>
+<header class="entete">
+  <div class="conteneur">
+    <a class="logo" href="../" aria-label="Voir le site public">
+      <img src="../assets/icons/icon.svg" width="42" height="42" alt="">
+      <span class="logo-txt"><b>Commandes</b><i>Hygiène &amp; Maison · privé</i></span>
+    </a>
+    <button type="button" class="btn-plus" id="btn-sortir" hidden>Fermer</button>
+  </div>
+</header>
+<main class="conteneur">
+  <section class="carte-code" id="ecran-code">
+    <h1>Commandes reçues par le site</h1>
+    <p>Page réservée. Tapez votre code.</p>
+    <form id="form-code" autocomplete="off">
+      <input id="code" type="password" autocapitalize="none" spellcheck="false" placeholder="Code" aria-label="Code" required>
+      <label class="souvenir"><input type="checkbox" id="souvenir" checked> Se souvenir sur cet appareil</label>
+      <button type="submit" class="btn-orange">Ouvrir</button>
+      <p class="erreur" id="erreur-code" role="alert" hidden></p>
+    </form>
+  </section>
+  <section id="espace" hidden>
+    <div class="chiffres" id="chiffres"></div>
+    <div class="outils">
+      <select id="periode" aria-label="Période">
+        <option value="7">7 derniers jours</option>
+        <option value="30" selected>30 derniers jours</option>
+        <option value="tout">Tout</option>
+      </select>
+      <span class="espace"></span>
+      <button type="button" class="btn-filtre" id="btn-maj">Actualiser</button>
+    </div>
+    <ul class="commandes" id="commandes"></ul>
+    <p class="note">Commandes <b>préparées</b> sur le site : le client a ouvert WhatsApp avec sa commande ; on ne sait pas s'il l'a envoyée.
+      Ni nom, ni téléphone, ni adresse ne sont gardés (seulement le gouvernorat). Tutto Clean reçoit et gère les commandes sur son WhatsApp ;
+      cette page ne prévient personne. Commandes gardées 400 jours.</p>
+  </section>
+</main>
+<script src="commandes.js?v=20261121a"></script>
+</body>
+</html>

@@ -15,7 +15,7 @@ from pathlib import Path
 from urllib.parse import urlencode
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from familles import famille, contenance, prix_unite, norm  # noqa: E402
+from familles import famille, contenance, prix_unite, norm, sous_rayon  # noqa: E402
 
 RACINE = Path(__file__).resolve().parent.parent
 DONNEES = RACINE / "donnees"
@@ -102,6 +102,8 @@ def offre(oid, enseigne, nom, marque, rayon, prix, reg, nb, url, image, desc="")
     pu = prix_unite(prix, val, unite)
     if pu:
         o["pu"] = [pu, unite]
+    if fam:
+        o["s"] = sous_rayon(nom + " " + desc, fam)
     return o
 
 
@@ -347,7 +349,22 @@ def accueil(offres, jour, etat):
             if files[f] and len(choix) < 24:
                 o = files[f].pop(0)
                 choix.append(o); vus.add(o["id"])
-    return {"date": jour, "total": len(offres), "familles": {f: len(v) for f, v in par_fam.items()},
+    # rayons : nombre, sous-rayons, et la photo d'un produit connu (marque la plus présente du rayon, produit avec photo)
+    rayons = {}
+    for f, l in par_fam.items():
+        sous = {}
+        for o in l:
+            sous[o.get("s") or "autres"] = sous.get(o.get("s") or "autres", 0) + 1
+        marques = {}
+        for o in l:
+            if o.get("m") and o.get("i"):
+                marques[o["m"]] = marques.get(o["m"], 0) + 1
+        top = max(marques, key=marques.get) if marques else None
+        photo = next((o["i"] for o in sorted(l, key=lambda o: o["p"]) if o.get("i") and o.get("m") == top), None) \
+            or next((o["i"] for o in l if o.get("i")), None)
+        rayons[f] = {"n": len(l), "s": sous, "i": photo}
+    promo = [{k: v for k, v in o.items() if k != "u"} for o in promos[:16]]
+    return {"date": jour, "total": len(offres), "familles": {f: len(v) for f, v in par_fam.items()}, "rayons": rayons, "promos": promo,
             "enseignes": {k: {kk: v.get(kk) for kk in ("offres", "erreur", "derniere_reussite")} for k, v in etat.items()},
             "produits": [{k: v for k, v in o.items() if k != "u"} for o in choix]}
 

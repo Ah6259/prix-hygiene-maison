@@ -15,7 +15,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
 <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#0B6E6E">
+<meta name="theme-color" content="#0D1B3E">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Hygiène &amp; Maison">
@@ -24,7 +24,7 @@
 <meta property="og:title" content="Prix Hygiène &amp; Maison — produits d'entretien et d'hygiène en Tunisie">
 <meta property="og:description" content="Lessive, javel, vaisselle, papier, couches, savon, shampoing… Les prix des grandes surfaces, et la commande livrée partout en Tunisie.">
 <meta property="og:url" content="https://hygiene.clicvia.com/">
-<meta property="og:image" content="https://hygiene.clicvia.com/assets/og-image-v1.jpg">
+<meta property="og:image" content="https://hygiene.clicvia.com/assets/og-image-v2.jpg">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -33,8 +33,8 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&amp;family=Tajawal:wght@400;500;700;800&amp;display=swap">
-<link rel="stylesheet" href="style.css?v=20261120c">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Tajawal:wght@400;500;700;800&amp;display=swap">
+<link rel="stylesheet" href="style.css?v=20261121a">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -45,7 +45,7 @@
       {"@type": "Question", "name": "D'où viennent les prix affichés ?",
        "acceptedAnswer": {"@type": "Answer", "text": "Ils sont relevés automatiquement chaque nuit sur les boutiques en ligne des grandes surfaces tunisiennes (Carrefour, Géant), seulement pour les produits en stock. Ils sont indicatifs."}},
       {"@type": "Question", "name": "Comment commander ?",
-       "acceptedAnswer": {"@type": "Answer", "text": "Ajoutez les produits à votre panier avec le bouton +, puis touchez « Commander » : la commande part sur WhatsApp. La boutique vous répond avec son prix et les frais de livraison, avant toute livraison."}},
+       "acceptedAnswer": {"@type": "Answer", "text": "Ajoutez les produits à votre panier, puis touchez « Commander » : la commande part sur WhatsApp. La boutique Tutto Clean vous répond avec son prix et les frais de livraison, avant toute livraison."}},
       {"@type": "Question", "name": "Livrez-vous partout en Tunisie ?",
        "acceptedAnswer": {"@type": "Answer", "text": "Oui, la livraison est possible dans toute la Tunisie. Les frais dépendent de la région et sont donnés sur WhatsApp avant de confirmer."}}
     ]}
@@ -56,40 +56,114 @@
 <body>
 <a class="saut" href="#produits" data-t="saut">Aller aux produits</a>
 
-<header class="entete">
-  <div class="entete-in">
-    <a class="logo" href="./" aria-label="Prix Hygiène &amp; Maison — accueil">
-      <img src="assets/icons/icon.svg" width="40" height="40" alt="">
-      <span class="logo-txt"><b>Prix Hygiène</b> <i>&amp; Maison</i></span>
-    </a>
-    <div class="entete-actions">
-      <button type="button" class="btn-langue" id="btn-langue" lang="ar">العربية</button>
-      <button type="button" class="btn-panier" id="btn-panier" aria-label="Voir mon panier">
-        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M3 4h2l2.4 10.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="20" r="1.6" fill="currentColor"/><circle cx="17" cy="20" r="1.6" fill="currentColor"/></svg>
-        <span class="panier-nb" id="panier-nb" hidden>0</span>
-      </button>
+<div class="bandeau-haut">
+  <div class="conteneur">
+    <div class="infos">
+      <span><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7zM7 19a2 2 0 1 0 0-.1M17 19a2 2 0 1 0 0-.1" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg><span data-t="haut-livraison">Livraison partout en Tunisie</span></span>
+      <span><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.2 11.4 11.4 0 0 0 3.6.6 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11.4 11.4 0 0 0 .6 3.6 1 1 0 0 1-.3 1Z"/></svg><a href="tel:+21699453345" class="num">99 453 345</a></span>
+      <span class="masque-tel"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.9z" fill="currentColor"/></svg><span data-t="haut-prix">Prix vérifiés chaque nuit</span></span>
     </div>
+    <button type="button" class="btn-langue" id="btn-langue" lang="ar">العربية</button>
+  </div>
+</div>
+
+<header class="entete">
+  <div class="conteneur">
+    <a class="logo" href="./" aria-label="Prix Hygiène &amp; Maison — accueil">
+      <img src="assets/icons/icon.svg" width="42" height="42" alt="">
+      <span class="logo-txt"><b>Hygiène &amp; Maison</b><i data-t="logo-sous">livré par Tutto Clean</i></span>
+    </a>
+    <div class="recherche">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <input type="search" id="q" autocomplete="off" enterkeyhint="search" placeholder="Rechercher un produit, une marque…" aria-label="Chercher un produit ou une marque" data-t-ph="chercher">
+    </div>
+    <button type="button" class="btn-panier" id="btn-panier" aria-label="Voir mon panier">
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M3 4h2l2.4 10.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="20" r="1.6" fill="currentColor"/><circle cx="17" cy="20" r="1.6" fill="currentColor"/></svg>
+      <span class="panier-nb" id="panier-nb" hidden>0</span>
+      <span class="bp-txt"><span data-t="panier">Panier</span><small id="panier-total"></small></span>
+    </button>
+  </div>
+  <div class="rayons-barre">
+    <div class="conteneur"><nav class="familles" id="familles" aria-label="Rayons"></nav></div>
   </div>
 </header>
 
 <main>
-  <section class="hero">
-    <div class="hero-in">
-      <h1 data-t="titre">Les prix de l'entretien et de l'hygiène, livrés chez vous</h1>
-      <p class="hero-phrase" data-t="phrase">Comparez les grandes surfaces, commandez sur WhatsApp, livraison partout en Tunisie.</p>
-      <div class="recherche">
-        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        <input type="search" id="q" autocomplete="off" enterkeyhint="search" placeholder="Chercher : lessive, Omo, javel, couches…" aria-label="Chercher un produit ou une marque" data-t-ph="chercher">
+  <div id="vue-accueil">
+    <section class="hero">
+      <div class="conteneur">
+        <div>
+          <span class="pastille"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M4 12l5 5L20 6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-t="hero-pastille">Carrefour · Géant · prix vérifiés chaque nuit</span></span>
+          <h1 data-t-html="titre">Les prix de l'entretien<br>et de l'hygiène,<br><span class="surligne">livrés chez vous</span></h1>
+          <p class="hero-phrase" data-t="phrase">Comparez, remplissez votre panier : Tutto Clean vous livre partout en Tunisie.</p>
+          <div class="hero-btns">
+            <a class="btn-orange" href="#promos" data-t="hero-promos">Voir les promotions</a>
+            <a class="btn-clair" href="https://wa.me/21699453345" target="_blank" rel="noopener" data-t="hero-wa">Commander sur WhatsApp</a>
+          </div>
+        </div>
+        <div class="hero-photos" id="hero-photos" aria-hidden="true"></div>
       </div>
-      <p class="maj" id="maj" aria-live="polite"><span data-t="maj-attente">Prix relevés chaque nuit en grande surface</span></p>
+    </section>
+
+    <section class="promesses">
+      <div class="conteneur">
+        <div class="promesse"><span class="ico"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 12l5 5L20 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div><b data-t="p1-t">Prix vérifiés chaque nuit</b><span id="maj" data-t="p1">Carrefour et Géant, produits en stock</span></div></div>
+        <div class="promesse"><span class="ico"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7zM7 19a2 2 0 1 0 0-.1M17 19a2 2 0 1 0 0-.1" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></span><div><b data-t="p2-t">Livré chez vous</b><span data-t="p2">Partout en Tunisie, frais donnés avant</span></div></div>
+        <div class="promesse"><span class="ico"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Z"/></svg></span><div><b data-t="p3-t">Commande en 1 minute</b><span data-t="p3">Sur WhatsApp, sans compte</span></div></div>
+      </div>
+    </section>
+
+    <section class="section conteneur" aria-labelledby="t-rayons">
+      <div class="section-tete"><div><h2 id="t-rayons" data-t="rayons-titre">Nos rayons</h2><p data-t="rayons-sous">Tout pour la maison et l'hygiène, rangé comme en magasin.</p></div></div>
+      <div class="rayons-grille" id="rayons-grille"></div>
+    </section>
+
+    <section class="section conteneur" id="promos" aria-labelledby="t-promos" hidden>
+      <div class="section-tete"><div><h2 id="t-promos" data-t="promos-titre">Promotions du moment</h2><p data-t="promos-sous">Les plus fortes remises écrites par les magasins.</p></div>
+        <button type="button" class="lien-tout" id="voir-promos" data-t="voir-tout">Voir tout →</button></div>
+      <div class="defile" id="defile-promos"></div>
+    </section>
+  </div>
+
+  <section id="produits" class="section conteneur" aria-live="polite">
+    <p class="fil" id="fil" hidden></p>
+    <div class="liste-tete">
+      <div><h2 id="liste-titre" data-t="tous">Tous les produits</h2><p class="compte" id="compte"></p></div>
     </div>
+    <div class="sous-rayons" id="sous-rayons" hidden></div>
+    <div class="outils">
+      <button type="button" class="btn-filtre" id="btn-marques" aria-expanded="false"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M4 5h16M7 12h10M10 19h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span id="txt-marques">Marques</span></button>
+      <select id="magasin" aria-label="Magasin">
+        <option value="" data-t="tous-magasins">Tous les magasins</option>
+        <option value="carrefour">Carrefour</option>
+        <option value="geant">Géant</option>
+        <option value="tutto">Tutto Clean</option>
+      </select>
+      <span class="espace"></span>
+      <select id="tri" aria-label="Trier">
+        <option value="pertinence" data-t="tri-pertinence">Pertinence</option>
+        <option value="prix" data-t="tri-prix">Prix croissant</option>
+        <option value="prix-desc" data-t="tri-prix-desc">Prix décroissant</option>
+        <option value="unite" data-t="tri-unite">Prix au litre / kilo / unité</option>
+        <option value="remise" data-t="tri-remise">Promotions d'abord</option>
+        <option value="nom" data-t="tri-nom">Marque A → Z</option>
+      </select>
+    </div>
+    <div class="panneau-marques" id="panneau-marques" hidden>
+      <input type="search" id="q-marque" placeholder="Chercher une marque" aria-label="Chercher une marque" data-t-ph="chercher-marque">
+      <div class="liste-marques" id="liste-marques"></div>
+      <div class="actions"><button type="button" id="marques-effacer" data-t="effacer">Effacer</button><button type="button" id="marques-ok" data-t="valider">Valider</button></div>
+    </div>
+    <div class="grille" id="grille"></div>
+    <div class="plus-zone"><button type="button" class="btn-plus" id="btn-plus" hidden></button></div>
+    <p class="note" data-t="note">Prix indicatifs relevés chaque nuit sur les sites des magasins (produits en stock seulement) : ce ne sont ni les prix en rayon, ni les prix de la boutique. Tutto Clean vous donne son prix et la livraison sur WhatsApp avant de confirmer.</p>
   </section>
 
-  <section class="boutique" aria-labelledby="boutique-titre">
+  <section class="section conteneur boutique" aria-labelledby="boutique-titre">
     <div class="boutique-in">
       <div class="boutique-txt">
         <h2 id="boutique-titre" data-t="boutique-titre">Commandez chez Tutto Clean, on vous livre</h2>
-        <p data-t="boutique-phrase">Votre commande part sur WhatsApp ; la boutique vous répond avec son prix et la livraison avant de livrer.</p>
+        <p data-t="boutique-phrase">Votre commande part sur WhatsApp ; Tutto Clean vous répond avec son prix et la livraison avant de livrer.</p>
       </div>
       <div class="boutique-btns">
         <a class="btn-plein btn-wa" id="lien-wa" href="https://wa.me/21699453345" target="_blank" rel="noopener">
@@ -100,35 +174,19 @@
           <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.2 11.4 11.4 0 0 0 3.6.6 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11.4 11.4 0 0 0 .6 3.6 1 1 0 0 1-.3 1Z"/></svg>
           <span class="num">99 453 345</span>
         </a>
-        <a class="btn-plein btn-carte" href="https://maps.google.com/maps?ftid=0x12e2cb005ef0896d:0x9df9049a18b3af98" target="_blank" rel="noopener">
+        <a class="btn-plein btn-carte" href="https://www.google.com/maps/place/Tutto+Clean/data=!4m2!3m1!1s0x0:0x9df9049a18b3af98" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z"/></svg>
           <span data-t="itineraire">Adresse de la boutique</span>
         </a>
       </div>
+      <a class="boutique-carte" href="https://www.google.com/maps/place/Tutto+Clean/data=!4m2!3m1!1s0x0:0x9df9049a18b3af98" target="_blank" rel="noopener" aria-label="Tutto Clean sur Google Maps : itinéraire">
+        <img src="assets/boutique-carte.webp?v=1" width="720" height="420" alt="Carte : Tutto Clean, 53 avenue de l'UMA, Borj Louizir" loading="lazy">
+        <span class="carte-adresse"><b>Tutto Clean</b><span data-t="adresse">53 Av. de l'UMA, Borj Louizir (La Soukra)</span><span class="carte-itin" data-t="itin">Itinéraire →</span></span>
+      </a>
     </div>
   </section>
 
-  <nav class="familles" id="familles" aria-label="Familles de produits"></nav>
-
-  <section id="produits" class="produits" aria-live="polite">
-    <div class="produits-tete">
-      <h2 id="liste-titre" data-t="tous">Tous les produits</h2>
-      <label class="tri"><span data-t="trier">Trier</span>
-        <select id="tri">
-          <option value="prix" data-t="tri-prix">Prix le plus bas</option>
-          <option value="unite" data-t="tri-unite">Prix au litre / au kilo / à l'unité</option>
-          <option value="remise" data-t="tri-remise">En promotion d'abord</option>
-          <option value="nom" data-t="tri-nom">Marque A → Z</option>
-        </select>
-      </label>
-    </div>
-    <p class="compte" id="compte"></p>
-    <div class="grille" id="grille"></div>
-    <div class="plus-zone"><button type="button" class="btn-plus" id="btn-plus" hidden></button></div>
-    <p class="note" data-t="note">Prix indicatifs relevés chaque nuit sur les sites des magasins (produits en stock seulement) : ce ne sont ni les prix en rayon, ni les prix de la boutique. Le prix de la boutique et la livraison vous sont donnés sur WhatsApp avant de confirmer.</p>
-  </section>
-
-  <section class="comment" id="comment">
+  <section class="section conteneur comment" id="comment">
     <details>
       <summary data-t="comment-titre">Comment fonctionne ce site ?</summary>
       <div class="comment-corps" id="comment-corps"></div>
@@ -160,27 +218,39 @@
       <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M2 21 23 12 2 3v7l15 2-15 2z"/></svg>
       <span data-t="envoyer">Envoyer ma commande sur WhatsApp</span>
     </button>
-    <p class="petit" data-t="panier-note">Rien n'est payé ici. La boutique vous répond sur WhatsApp avec son prix et les frais de livraison ; vous confirmez ensuite.</p>
+    <p class="petit" data-t="panier-note">Rien n'est payé ici. Tutto Clean vous répond sur WhatsApp avec son prix et les frais de livraison ; vous confirmez ensuite.</p>
   </form>
 </dialog>
 
 <footer class="pied">
-  <div class="pied-in">
-    <p><b>Prix Hygiène &amp; Maison</b> — <span data-t="pied-phrase">prix relevés chaque nuit chez Carrefour et Géant. Site non officiel, sans lien avec ces enseignes.</span></p>
-    <p class="pied-liens">
-      <a href="https://wa.me/21699453345" target="_blank" rel="noopener" data-t="pied-commander">Commander : 99 453 345</a>
-      <a href="https://maps.google.com/maps?ftid=0x12e2cb005ef0896d:0x9df9049a18b3af98" target="_blank" rel="noopener" data-t="pied-boutique">Adresse de la boutique</a>
-      <a href="#comment" data-t="pied-comment">Comment fonctionne ce site ?</a>
-      <a href="https://clicvia.com/confidentialite/" data-t="pied-confid">Confidentialité</a>
-      <a href="https://clicvia.com/conditions/" data-t="pied-cond">Conditions d'utilisation</a>
-      <a href="https://clicvia.com/" data-t="pied-tous">Tous nos services</a>
-    </p>
-    <p class="copy">© 2026 Prix Hygiène &amp; Maison — <span data-t="droits">tous droits réservés</span>. <span data-t="photos">Photos des produits : sites des magasins, avec leur accord.</span></p>
+  <div class="conteneur pied-in">
+    <div>
+      <div class="marque-pied"><img src="assets/icons/icon.svg" width="36" height="36" alt=""><b>Hygiène &amp; Maison</b></div>
+      <p data-t="pied-phrase">Les prix des produits d'entretien et d'hygiène, relevés chaque nuit chez Carrefour et Géant, et livrés chez vous par Tutto Clean. Site non officiel, sans lien avec ces enseignes.</p>
+    </div>
+    <div>
+      <h3 data-t="pied-commander-t">Commander</h3>
+      <p class="pied-liens">
+        <a href="https://wa.me/21699453345" target="_blank" rel="noopener" data-t="pied-commander">WhatsApp : 99 453 345</a>
+        <a href="tel:+21699453345" data-t="pied-appeler">Appeler la boutique</a>
+        <a href="https://www.google.com/maps/place/Tutto+Clean/data=!4m2!3m1!1s0x0:0x9df9049a18b3af98" target="_blank" rel="noopener" data-t="pied-boutique">Adresse de la boutique</a>
+      </p>
+    </div>
+    <div>
+      <h3 data-t="pied-infos-t">Informations</h3>
+      <p class="pied-liens">
+        <a href="#comment" data-t="pied-comment">Comment fonctionne ce site ?</a>
+        <a href="https://clicvia.com/confidentialite/" data-t="pied-confid">Confidentialité</a>
+        <a href="https://clicvia.com/conditions/" data-t="pied-cond">Conditions d'utilisation</a>
+        <a href="https://clicvia.com/" data-t="pied-tous">Tous nos services</a>
+      </p>
+    </div>
   </div>
+  <div class="conteneur copy">© 2026 Prix Hygiène &amp; Maison — <span data-t="droits">tous droits réservés</span>. <span data-t="photos">Photos des produits : sites des magasins, avec leur accord.</span></div>
 </footer>
 
-<script src="assets/son.js?v=20261120c"></script>
-<script src="app.js?v=20261120c"></script>
+<script src="assets/son.js?v=20261120a"></script>
+<script src="app.js?v=20261121a"></script>
 <script src="assets/stats.js?v=1"></script>
 <script data-goatcounter="https://prix-eaux-tunisie.goatcounter.com/count" defer src="https://gc.zgo.at/count.js"></script>
 </body>
