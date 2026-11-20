@@ -17,6 +17,15 @@ et modèle « suivi de prix » : dépôt privé projets-ahmed (dossier parent `_
 - Cache des téléphones : changer le `?v=` de style.css / app.js dans index.html à chaque modification (20261120a) ; `CACHE_VERSION` de sw.js.
 - GoatCounter : préfixe `/prix-hygiene-maison` (`assets/stats.js`), compteur commun ; clic « commande envoyée » compté comme événement.
 
+## Tutto Clean (boutique de l'ami, 20/11/2026 : nom autorisé par Ahmed, prix SANS livraison)
+- Espace privé `tutto-clean/` (noindex, code de la boutique ; jamais dans le dépôt) : la boutique tape ses prix à côté des produits relevés,
+  « en stock », « Retirer », « Ajouter un produit » (photo réduite en WebP dans le téléphone).
+- Carnet : Cloudflare Worker `hygiene-tutto-clean` (source `worker/tutto-clean.js`) + KV `hygiene-tutto-clean`, adresse https://api-hygiene.clicvia.com ;
+  GET /prix (public, cache 60 s), GET /photo/<id>, POST /prix et /verifier (en-tête X-Code ; empreinte SHA-256 du code = secret `CODE_SHA256`).
+  Redéployer après une modification : API Cloudflare (PUT workers/scripts, voir l'historique de la session du 20/11) avec la clé du PC d'Ahmed.
+- Site public : `API_TUTTO` (meta `hm-api`, les essais la remplacent par un faux carnet `/__tutto`), bouton « Tutto Clean », ligne « Tutto Clean : X DT +
+  livraison » sur les cartes, produits propres (`e: "tutto"`), panier et message WhatsApp au prix Tutto Clean ; carnet injoignable = site normal.
+
 ## Robot (`.github/workflows/maj-prix.yml`, vers 1h17)
 - `robot/relever.py` : Carrefour par son API GraphQL (33 rayons en un seul filtre `category_uid:{in:[…]}`, CHAQUE magasin lu,
   prix le plus courant, marque = champ `brand` du magasin), Géant Drive (10 sous-rayons, HTML, noms coupés « … » relus dans l'adresse).
