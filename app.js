@@ -38,7 +38,7 @@
       tout: "Tout", accueil: "Accueil", ajouter: "Ajouter", moins: "Retirer un", plus: "Ajouter un", tousRayon: "Tout le rayon",
       chez: "chez", magasins: "dans {n} magasins sur {m}", voirPlus: "Voir {n} produits de plus", chargement: "Chargement des produits…",
       aucun: "Aucun produit trouvé. Essayez un autre mot, ou demandez-le directement sur WhatsApp : Tutto Clean a aussi d'autres produits.",
-      compte: "{n} produits", compteUn: "1 produit", maj: "Prix du {d} · {n} produits en stock", panne: "{e} : prix du {d} (pas de réponse depuis)",
+      compte: "{n} produits", compteUn: "1 produit", maj: "Prix du {d} · {n} produits en stock", "pastille-maj": "Carrefour · Géant · prix mis à jour le {d}", panne: "{e} : prix du {d} (pas de réponse depuis)",
       marquesN: "Marques ({n})", promosTitre: "Promotions", rechercheTitre: "Résultats pour « {q} »",
       panierVide: "Votre panier est vide : ajoutez des produits avec le bouton « Ajouter ».",
       estim: "Total indicatif : {t} DT (+ livraison). Tutto Clean vous confirme son prix sur WhatsApp.",
@@ -76,7 +76,7 @@
       tout: "الكل", accueil: "الرئيسية", ajouter: "أضف", moins: "أنقص واحدًا", plus: "أضف واحدًا", tousRayon: "كل القسم",
       chez: "في", magasins: "في {n} متجرًا من {m}", voirPlus: "عرض {n} منتجات أخرى", chargement: "جارٍ تحميل المنتجات…",
       aucun: "لا توجد نتيجة. جرّب كلمة أخرى، أو اطلبه مباشرة عبر واتساب: لدى Tutto Clean منتجات أخرى أيضًا.",
-      compte: "{n} منتجًا", compteUn: "منتج واحد", maj: "أسعار يوم {d} · {n} منتجًا متوفرًا", panne: "{e}: أسعار يوم {d} (لا رد منذ ذلك)",
+      compte: "{n} منتجًا", compteUn: "منتج واحد", maj: "أسعار يوم {d} · {n} منتجًا متوفرًا", "pastille-maj": "كارفور · جيان · أسعار محيّنة يوم {d}", panne: "{e}: أسعار يوم {d} (لا رد منذ ذلك)",
       marquesN: "العلامات ({n})", promosTitre: "التخفيضات", rechercheTitre: "نتائج «{q}»",
       panierVide: "سلّتك فارغة: أضف منتجات بزر «أضف».",
       estim: "المجموع التقريبي: {t} د.ت (+ التوصيل). يؤكد لك Tutto Clean سعره عبر واتساب.",
@@ -219,6 +219,9 @@
       if (e[k].erreur && e[k].derniere_reussite && e[k].derniere_reussite !== accueil.date) pannes.push(t("panne", { e: nomEnseigne(k), d: iso(dateCourte(e[k].derniere_reussite)) }));
     });
     el.textContent = t("maj", { d: iso(dateCourte(accueil.date)), n: iso(String(accueil.total || 0)) }) + (pannes.length ? " · " + pannes.join(" · ") : "");
+    // 21/11/2026 (Ahmed) : la date du dernier relevé se voit DÈS l'ouverture, dans la pastille du bandeau
+    var pastille = document.querySelector('[data-t="hero-pastille"]');
+    if (pastille && accueil.date) pastille.textContent = t("pastille-maj", { d: iso(dateCourte(accueil.date)) });
   }
   function afficherFamilles() {
     var nav = $("familles"), nb = (accueil && accueil.familles) || {};

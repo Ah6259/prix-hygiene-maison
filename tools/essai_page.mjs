@@ -140,6 +140,11 @@ for (const [nom, w, h, mobile] of [["telephone", 390, 844, true], ["ordinateur",
     const copies = r.querySelectorAll('.tuile[aria-hidden="true"]').length, toutes = r.querySelectorAll(".tuile").length;
     return a && a !== "none" && copies * 2 === toutes && toutes >= 4; })()`), "photos du bandeau qui BOUGENT (défilement en boucle, copies aria-hidden)");
   verif(await val(`document.documentElement.scrollWidth <= innerWidth`), "photos qui bougent : rien ne dépasse de l'écran");
+  verif(await val(`/mis à jour le \\d{2}\\/\\d{2}\\/\\d{4}|محيّنة يوم/.test(document.querySelector('[data-t="hero-pastille"]').textContent)`), "date du dernier relevé visible en haut du bandeau");
+  if (w < 500) {   // 21/11/2026 (Ahmed) : à l'ouverture, les photos du bandeau sont ENTIÈRES dans le 1er écran d'un téléphone (405 x 740 visibles)
+    verif(await val(`(() => { const r = document.querySelector("#hero-photos .r1 .tuile"); if (!r) return false; scrollTo(0, 0);
+      return r.getBoundingClientRect().bottom + scrollY <= 740; })()`), "téléphone : photos du bandeau entières à l'ouverture (écran de 740 px)");
+  }
   verif(await val(`(() => { const i = document.querySelector("#qr-image"); return !!i && i.complete && i.naturalWidth > 0 && i.src.endsWith("hygiene-fr.svg") && document.querySelector("#qr-telecharger").href.endsWith("hygiene-fr.png"); })()`), "QR code à partager (image affichée + téléchargement)");
   verif(await val(`(() => { const b = document.querySelector("#boutique"), h = document.querySelector(".hero"); return !!b && !!h && b.getBoundingClientRect().top > h.getBoundingClientRect().top && b.getBoundingClientRect().top < document.querySelector("#t-rayons").getBoundingClientRect().top; })()`), "accueil : la boutique Tutto Clean juste après le bandeau, avant les rayons");
   verif((await val(`document.querySelector('.hero .btn-orange').href`) || "").startsWith("https://wa.me/21699453345"), "bandeau : « Commander chez Tutto Clean »");
