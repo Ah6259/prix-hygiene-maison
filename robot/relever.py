@@ -279,7 +279,8 @@ def photos(offres, sans_reseau=False, maximum=4000):
         if not src:
             continue
         nom = hashlib.sha1(src.encode()).hexdigest()[:14] + ".webp"
-        if carnet.get(src) == nom and (IMG / nom).exists():
+        if (IMG / nom).exists():                       # déjà copiée (le nom vient de l'adresse de la photo) : même sans le carnet
+            carnet[src] = nom
             o["i"] = f"assets/img/p/{nom}"
             continue
         if sans_reseau or Image is None or nouvelles >= maximum:
@@ -401,7 +402,7 @@ def main():
     if not offres:
         ecrire(DONNEES / "etat.json", etat)
         sys.exit("ÉCHEC : aucune enseigne lue et aucun ancien prix")
-    photos([o for o in offres if "img" in o], sans_reseau=local or "--sans-images" in sys.argv)
+    photos([o for o in offres if "img" in o], sans_reseau="--sans-images" in sys.argv)   # --local relit les prix du jour mais copie les photos manquantes
     for o in offres:
         o.pop("img", None)
     offres.sort(key=lambda o: (o["f"], o["p"]))
