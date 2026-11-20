@@ -42,3 +42,15 @@ et modèle « suivi de prix » : dépôt privé projets-ahmed (dossier parent `_
   390 et 1300 px, FR et AR, données inventées : familles, recherche, tri, panier, message WhatsApp, rien qui dépasse).
 - Avant d'envoyer un robot modifié : `python3 "../../outils communs/envoi-robot/controle_robots.py" --local .`
 - Page 404 commune : `python "../../outils communs/page-404/installer.py" --verifier .`
+
+## 21/11/2026 — design magasin, logo, partage, commandes (règle commune § 62)
+- Accueil : bandeau (slogan « Les prix de l'entretien et de l'hygiène, livrés chez vous ») → boutique Tutto Clean (`#boutique`, carte
+  `assets/boutique-carte.webp` faite depuis OpenStreetMap, lien Google Maps de la fiche) → promesses → rayons (13 tuiles photo) → promotions → QR
+  (`#qr`, `tools/qr_code.py`) → « Voir tous les produits » (`toutVoir`) ; liste complète jamais d'office ; sous-rayons (`SOUS`), filtres marques/magasin.
+- Logo v2 : maison blanche + goutte d'eau bleue + étincelles jaunes, fond marine (`assets/icons/`, `?v=2`, `CACHE_VERSION` 2) ; aperçu `og-image-v3.jpg`.
+- Bouton rond « Partager » (`partager()` d'app.js, `PAGE_VIDEO` à remplir quand la vidéo existe).
+- Commandes : `noterCommande()` → POST /commande (sans nom/téléphone/adresse) ; onglet « Mes commandes » de `tutto-clean/` (états, POST /commande-etat,
+  code de la boutique) ; `commandes/` = page d'Ahmed (code `ADMIN_SHA256`, lecture seule). Déploiement du Worker : API Cloudflare (script
+  `deployer.sh` de la session, empreintes des deux codes, jamais les codes).
+- Photos : 1re copie depuis le PC par paquets (`HM_PHOTOS_MAX`, photos vues d'abord) ; le robot de nuit ne copie ensuite que les nouvelles.
+- RESTE : vidéo de présentation (format Reel) + page `video/` + lien en bas + vidéo du portail.
