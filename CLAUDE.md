@@ -14,8 +14,8 @@ et modèle « suivi de prix » : dépôt privé projets-ahmed (dossier parent `_
 - FR + AR (`?lang=ar`, bouton, choix gardé), nombres de gauche à droite en arabe, mode sombre, téléphone d'abord.
 - Accueil léger (règle § 60) : `data/accueil.json` (24 produits + nombres) tout de suite, `data/produits.json` au 1er geste.
 - Familles (13) : linge, vaisselle, maison, javel (et WC), desodorisant, accessoires, papier, bebe, feminine, corps, cheveux, bouche, soins.
-- Cache des téléphones : changer le `?v=` de style.css / app.js dans index.html à chaque modification (style.css 20261121m — aussi dans
-  tutto-clean/, video/, commandes/ —, app.js 20261121j) ; `CACHE_VERSION` de sw.js (3) ; puis `node tools/construire_ar.mjs` (page arabe).
+- Cache des téléphones : changer le `?v=` de style.css / app.js dans index.html à chaque modification (style.css 20261121n — aussi dans
+  tutto-clean/, video/, commandes/ —, app.js 20261121k) ; `CACHE_VERSION` de sw.js (4) ; puis `node tools/construire_ar.mjs` (page arabe).
 - GoatCounter : préfixe `/prix-hygiene-maison` (`assets/stats.js`), compteur commun ; clic « commande envoyée » compté comme événement.
 
 ## Tutto Clean (boutique de l'ami, 20/11/2026 : nom autorisé par Ahmed, prix SANS livraison)
@@ -78,3 +78,10 @@ et modèle « suivi de prix » : dépôt privé projets-ahmed (dossier parent `_
 - **En ligne le 20/11/2026** (PR #1 fusionnée dans `main`, vérifié sur https://hygiene.clicvia.com/ au téléphone : nouveau titre et couleurs).
   Les essais attendent le titre arabe avec « النظافة » (`tools/essai_page.mjs`) : le changer aussi si le titre arabe change.
 - **Reprendre sur le PC** : dans le dossier du site, `git checkout main` puis `git pull` (la branche de la session en ligne est déjà fusionnée).
+- **Logo et aperçu de partage aux nouvelles couleurs (20/11/2026, Ahmed : « en partageant, j'ai les anciennes couleurs »)** : logo v3 = même dessin
+  (maison blanche, goutte bleue, étincelles jaune pâle) sur fond turquoise #14B8A6 → #0B7A70 (`assets/icons/icon.svg`, PNG refaits par capture
+  Chromium : maskable / iPhone = symbole à 78 % sur carré plein ; `?v=3`) ; aperçu `og-image-v4.jpg` (modèle `tools/og-image.html`, clair) ;
+  barre du téléphone (`theme-color`, manifeste) #0F3B47 ; QR recoloré #0F3B47 (`tools/qr_code.py` aussi) ; `CACHE_VERSION` 4.
+  Restent aux anciennes couleurs : la VIDÉO de présentation et son aperçu `assets/video/apercu-video.jpg` (à refaire sur le PC :
+  `python fabriquer.py hygiene`) et la page 404 commune (outil commun, ne pas la modifier ici).
+  Un lien déjà partagé garde l'ancien aperçu dans WhatsApp / Facebook (leur mémoire) ; les nouveaux partages montrent le nouveau.

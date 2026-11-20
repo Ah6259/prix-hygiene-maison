@@ -171,7 +171,7 @@ button{cursor:pointer}
 /* photo posée DANS un carré fixe : une photo très haute ne grandit plus la carte (vu le 21/11/2026, flacon Rojanet) */
 .carte .photo img{position:absolute;inset:14px;width:calc(100% - 28px);height:calc(100% - 28px);object-fit:contain;user-select:none;-webkit-user-drag:none}
 .carte .photo .sans{position:absolute;inset:10px;width:auto!important;height:auto!important}
-.carte .photo .sans{width:100%;height:100%;border-radius:12px;background:var(--fa,#EEF2FF);color:var(--fc,#2350E6);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:10px;text-align:center}
+.carte .photo .sans{width:100%;height:100%;border-radius:12px;background:var(--fa,#E3F7F3);color:var(--fc,#0B7A70);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:10px;text-align:center}
 .carte .photo .sans b{font-size:15px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;line-height:1.15;word-break:break-word}
 .carte .corps{padding:4px 12px 12px;display:flex;flex-direction:column;gap:3px;flex:1;min-width:0}
 .carte .marque{font-size:11px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--doux);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}

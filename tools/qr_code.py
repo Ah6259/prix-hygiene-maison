@@ -18,8 +18,8 @@ def main():
     for langue, url in ADRESSES.items():
         qr = segno.make(url, error="m")
         base = os.path.join(DOSSIER, f"hygiene-{langue}")
-        qr.save(base + ".svg", scale=8, border=4, dark="#0D1B3E", light="#ffffff", xmldecl=False, svgns=True, title=url)
-        qr.save(base + ".png", scale=max(1, 1024 // (qr.symbol_size(border=4)[0])), border=4, dark="#0D1B3E", light="#ffffff")
+        qr.save(base + ".svg", scale=8, border=4, dark="#0F3B47", light="#ffffff", xmldecl=False, svgns=True, title=url)
+        qr.save(base + ".png", scale=max(1, 1024 // (qr.symbol_size(border=4)[0])), border=4, dark="#0F3B47", light="#ffffff")
         print(f"{langue} : {url} -> {base}.svg / .png ({qr.version}-{qr.error})")
 
 
