@@ -321,3 +321,12 @@ body.a-panier main{padding-bottom:84px}
   .hero-photos .tuile{width:42vw;max-width:200px;height:42vw;max-height:200px;border-radius:18px;padding:10px}
 }
 @media (prefers-reduced-motion:reduce){.hero-photos .rangee{animation:none}}
+/* 21/11/2026 (Ahmed) : bandeau au téléphone — deux boutons de même largeur, photos entières (3 visibles, peu penchées, rien de coupé) */
+@media (max-width:860px){
+  .hero-btns{flex-direction:column;align-items:stretch;gap:10px}
+  .hero-btns .btn-orange,.hero-btns .btn-clair{width:100%;padding:14px 18px;font-size:16px}
+  .hero-photos{padding:14px 0 18px;margin-inline:-16px;width:calc(100% + 32px)}
+  .hero-photos .rangee{gap:12px}
+  .hero-photos .tuile{width:30vw;max-width:150px;height:30vw;max-height:150px;border-radius:16px;padding:8px}
+  .hero-photos .tuile:nth-child(odd){transform:rotate(-1.5deg)}.hero-photos .tuile:nth-child(even){transform:rotate(1.5deg)}
+}
