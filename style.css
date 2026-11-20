@@ -290,3 +290,8 @@ body.a-panier main{padding-bottom:84px}
 .qr-txt p{margin:0 0 8px;color:var(--doux);font-size:14px}
 .qr-txt .qr-adresse{font-weight:800;color:var(--navy);font-size:16px}
 @media (max-width:560px){.qr-carte{flex-direction:column;text-align:center}.qr-carte img{width:200px;height:200px}}
+/* logo v2 (21/11/2026) : « Hygiène » marine, « & Maison » orange */
+.logo-txt b .et{color:var(--orange)}
+.pied .marque-pied b .et{color:var(--orange)}
+.logo img{border-radius:12px}
+@media (max-width:440px){.bandeau-haut .infos .masque-petit{display:none}}
