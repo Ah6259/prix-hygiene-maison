@@ -1,0 +1,10 @@
+/* page vidéo de présentation (21/11/2026) — complète ../style.css */
+.page-video{max-width:560px;text-align:center;padding-top:22px;padding-bottom:30px}
+.page-video h1{font-size:clamp(24px,6vw,32px);line-height:1.15;color:var(--navy);margin:0 0 6px;letter-spacing:-.5px}
+.surligne-video{color:var(--orange)}
+.page-video .ar{margin:0 0 16px;font-family:var(--police-ar);font-size:18px;color:var(--doux)}
+.video-lecteur{display:block;width:100%;max-width:400px;height:auto;aspect-ratio:9/16;margin:0 auto 14px;border-radius:22px;background:#000;box-shadow:var(--ombre-forte)}
+.video-btns{display:flex;flex-direction:column;gap:10px;align-items:stretch;max-width:400px;margin:0 auto}
+.btn-clair-video{display:inline-flex;align-items:center;justify-content:center;border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:999px;padding:12px 18px;font-weight:800;text-decoration:none;font-size:15px}
+.petit-video{font-size:12.5px;color:var(--doux);margin-top:14px}
+.entete .conteneur{justify-content:space-between}

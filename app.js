@@ -33,7 +33,7 @@
       "panier-note": "Rien n'est payé ici. Tutto Clean vous répond sur WhatsApp avec son prix et les frais de livraison ; vous confirmez ensuite.",
       "pied-phrase": "Les prix des produits d'entretien et d'hygiène, relevés chaque nuit chez Carrefour et Géant, et livrés chez vous par Tutto Clean. Site non officiel, sans lien avec ces enseignes.",
       "pied-commander-t": "Commander", "pied-commander": "WhatsApp : 99 453 345", "pied-appeler": "Appeler la boutique", "pied-boutique": "Adresse de la boutique",
-      "pied-infos-t": "Informations", "pied-comment": "Comment fonctionne ce site ?", "pied-confid": "Confidentialité", "pied-cond": "Conditions d'utilisation", "pied-tous": "Tous nos services",
+      "pied-infos-t": "Informations", "pied-comment": "Comment fonctionne ce site ?", "pied-video": "Vidéo de présentation", "pied-confid": "Confidentialité", "pied-cond": "Conditions d'utilisation", "pied-tous": "Tous nos services",
       droits: "tous droits réservés", photos: "Photos des produits : sites des magasins, avec leur accord.",
       tout: "Tout", accueil: "Accueil", ajouter: "Ajouter", moins: "Retirer un", plus: "Ajouter un", tousRayon: "Tout le rayon",
       chez: "chez", magasins: "dans {n} magasins sur {m}", voirPlus: "Voir {n} produits de plus", chargement: "Chargement des produits…",
@@ -71,7 +71,7 @@
       "panier-note": "لا دفع هنا. يرد عليك Tutto Clean عبر واتساب بسعره وكلفة التوصيل، ثم تؤكد.",
       "pied-phrase": "أسعار مواد التنظيف والنظافة، تُجمع كل ليلة من كارفور وجيان، ويوصّلها إليك Tutto Clean. موقع غير رسمي، لا علاقة له بهذه المتاجر.",
       "pied-commander-t": "الطلب", "pied-commander": "واتساب: 99 453 345", "pied-appeler": "اتصل بالمحل", "pied-boutique": "عنوان المحل",
-      "pied-infos-t": "معلومات", "pied-comment": "كيف يعمل الموقع؟", "pied-confid": "الخصوصية", "pied-cond": "شروط الاستعمال", "pied-tous": "كل خدماتنا",
+      "pied-infos-t": "معلومات", "pied-comment": "كيف يعمل الموقع؟", "pied-video": "الفيديو التقديمي", "pied-confid": "الخصوصية", "pied-cond": "شروط الاستعمال", "pied-tous": "كل خدماتنا",
       droits: "جميع الحقوق محفوظة", photos: "صور المنتجات: مواقع المتاجر، بموافقتها.",
       tout: "الكل", accueil: "الرئيسية", ajouter: "أضف", moins: "أنقص واحدًا", plus: "أضف واحدًا", tousRayon: "كل القسم",
       chez: "في", magasins: "في {n} متجرًا من {m}", voirPlus: "عرض {n} منتجات أخرى", chargement: "جارٍ تحميل المنتجات…",
@@ -452,7 +452,7 @@
   }
   // Bouton rond « Partager » (règle commune § 8) : menu de partage du téléphone, sinon WhatsApp ; clic compté dans GoatCounter.
   // Il partage un LIEN : la page vidéo de présentation (PAGE_VIDEO, dès qu'elle existe) + l'adresse du site.
-  var PAGE_VIDEO = "";
+  var PAGE_VIDEO = "https://hygiene.clicvia.com/video/";   // vidéo de présentation (21/11/2026)
   function partager() {
     var site = "https://hygiene.clicvia.com/" + (langue === "ar" ? "ar/" : ""), lien = PAGE_VIDEO || site;
     var texte = (langue === "ar" ? "أسعار مواد التنظيف والنظافة، تصلك إلى بيتك — Tutto Clean\nالموقع: " : "Les prix de l'entretien et de l'hygiène, livrés chez vous — Tutto Clean\nLe site : ") + site;
@@ -478,6 +478,7 @@
       "<b>Promotion</b> : la remise en rouge (−20 %) vient du prix barré écrit par le magasin.",
       "<b>Recherche</b> : par produit ou par marque, même avec une autre écriture (Omo, Ariel, Dixan…).",
       "<b>Tutto Clean</b> : la boutique qui livre tape elle-même ses prix (sans la livraison) dans son espace privé ; ils s'affichent tout de suite à côté de ceux des grandes surfaces, avec le bouton « Tutto Clean » pour voir tous ses produits. Le panier prend le prix Tutto Clean quand il existe.",
+      "<b>Vidéo de présentation</b> : une vidéo verticale (format Reel) montre le site ; le bouton « Partager » envoie sa page, qu'on peut aussi télécharger pour la publier sur Instagram ou Facebook.",
       "<b>QR code</b> : sur l'accueil, un QR code de l'adresse du site (et un bouton pour le télécharger, à envoyer ou à imprimer) : on le scanne avec l'appareil photo du téléphone. Le bouton rond « Partager » en haut envoie aussi le lien du site.",
       "<b>Commander</b> : le bouton « Ajouter » met le produit dans votre panier (gardé dans votre téléphone). « Commander » prépare un message WhatsApp avec un numéro de commande, vos produits et votre adresse : vous l'envoyez vous-même. Tutto Clean vous répond avec SON prix et les frais de livraison (toute la Tunisie) ; rien n'est payé sur le site.",
       "<b>Panne d'un magasin</b> : si un site de magasin ne répond pas, ses derniers prix restent affichés avec leur date.",
@@ -491,6 +492,7 @@
       "<b>التخفيض</b>: النسبة الحمراء تأتي من السعر المشطوب الذي كتبه المتجر.",
       "<b>البحث</b>: بالمنتج أو بالعلامة، حتى بكتابة مختلفة.",
       "<b>Tutto Clean</b>: المحل الذي يوصّل يكتب أسعاره بنفسه (دون التوصيل) في فضائه الخاص؛ تظهر فورًا بجانب أسعار المساحات الكبرى، مع زر «Tutto Clean» لرؤية كل منتجاته. السلة تأخذ سعر Tutto Clean إن وُجد.",
+      "<b>الفيديو التقديمي</b>: فيديو عمودي (بصيغة Reel) يعرض الموقع؛ زر «شارك» يرسل صفحته، ويمكن تحميله لنشره على إنستغرام أو فيسبوك.",
       "<b>رمز QR</b>: في الصفحة الرئيسية رمز QR لعنوان الموقع (وزر لتحميله وإرساله أو طباعته): يُمسح بكاميرا الهاتف. والزر الدائري «شارك» في الأعلى يرسل رابط الموقع أيضًا.",
       "<b>الطلب</b>: زر «أضف» يضع المنتج في سلتك (محفوظة في هاتفك). «اطلب» يحضّر رسالة واتساب برقم الطلب ومنتجاتك وعنوانك: ترسلها بنفسك. يرد عليك Tutto Clean بسعره هو وبكلفة التوصيل (كامل تونس)؛ لا دفع في الموقع.",
       "<b>عطل في متجر</b>: إذا لم يرد موقع متجر، تبقى آخر أسعاره معروضة مع تاريخها.",
