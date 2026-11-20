@@ -81,7 +81,8 @@ button{cursor:pointer}
 .hero h1 .surligne{position:relative;display:inline-block;color:var(--jaune);white-space:nowrap;z-index:0}
 .hero h1 .surligne::after{content:"";position:absolute;inset-inline:-4px;bottom:.04em;height:.26em;background:var(--orange);border-radius:999px;transform:rotate(-1.2deg);z-index:-1;opacity:.9}
 [dir=rtl] .hero h1{letter-spacing:0;line-height:1.25}
-.hero-phrase{margin:0 0 22px;font-size:16.5px;color:#C9D3EE;max-width:520px}
+.hero-phrase{margin:0 0 22px;font-size:16.5px;color:#C9D3EE;max-width:700px}
+@media (min-width:861px){.hero-phrase{white-space:nowrap}}
 .hero-btns{display:flex;flex-wrap:wrap;gap:10px}
 .btn-orange,.btn-clair{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:999px;padding:13px 22px;font-weight:800;font-size:15px;text-decoration:none;border:0}
 .btn-orange{background:var(--orange);color:#fff;box-shadow:0 8px 20px rgba(255,106,19,.35)}
@@ -294,5 +295,14 @@ body.a-panier main{padding-bottom:84px}
 .logo-txt b .et{color:var(--orange)}
 .pied .marque-pied b .et{color:var(--orange)}
 .logo img{border-radius:12px}
-@media (max-width:440px){.bandeau-haut .infos .masque-petit{display:none}}
 .piege{position:absolute!important;left:-9999px!important;width:1px;height:1px;opacity:0}
+/* barre du haut au téléphone (21/11/2026, Ahmed : « pourquoi le téléphone n'a pas Livraison partout en Tunisie ») : texte court, rien de coupé */
+.bandeau-haut .infos .texte-court{display:none!important}
+@media (max-width:440px){
+  .bandeau-haut .infos .texte-long{display:none!important}.bandeau-haut .infos .texte-court{display:inline!important}
+  .bandeau-haut .conteneur{gap:8px;padding-inline:12px}
+  .bandeau-haut .infos{gap:9px;font-size:11.5px;letter-spacing:-.1px}
+  .bandeau-haut .infos svg{width:13px;height:13px}
+  .bandeau-haut .infos span{gap:4px}
+  .bandeau-haut .btn-langue{padding:2px 9px;font-size:12px}
+}

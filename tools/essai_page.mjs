@@ -158,6 +158,10 @@ for (const [nom, w, h, mobile] of [["telephone", 390, 844, true], ["ordinateur",
   const chevauche = `(() => { const a = document.querySelector(".logo-txt").getBoundingClientRect(), b = document.querySelector(".entete-actions").getBoundingClientRect();
     return document.documentElement.dir === "rtl" ? a.left < b.right : a.right > b.left; })()`;
   verif(!(await val(chevauche)), "en-tête : le nom du site n'est pas coupé par les boutons");
+  verif(await val(`(() => { const i = document.querySelector(".bandeau-haut .infos"), b = document.querySelector(".bandeau-haut .btn-langue").getBoundingClientRect();
+    const vis = [...i.querySelectorAll("span")].filter(s => s.offsetParent && s.getClientRects().length);
+    const livraison = vis.some(s => /livr/i.test(s.textContent)), tel = /99 453 345/.test(i.textContent);
+    return i.scrollWidth <= i.clientWidth + 1 && livraison && tel && i.getBoundingClientRect().right <= b.left + 1; })()`), "barre du haut : livraison + téléphone visibles, rien de coupé");
   await capture(`${nom}-accueil`);
 
   // 1er geste : la liste complète arrive

@@ -12,7 +12,7 @@
   /* ------------------------------------------------------------ textes */
   var T = {
     fr: {
-      saut: "Aller aux produits", "haut-livraison": "Livraison partout en Tunisie", "haut-prix": "Prix vérifiés chaque nuit", "logo-sous": "livré par Tutto Clean",
+      saut: "Aller aux produits", "haut-livraison": "Livraison partout en Tunisie", "haut-livraison-court": "Livré partout en Tunisie", "haut-prix": "Prix vérifiés chaque nuit", "logo-sous": "livré par Tutto Clean",
       chercher: "Rechercher un produit, une marque…", panier: "Panier", "hero-pastille": "Carrefour · Géant · prix vérifiés chaque nuit",
       titre: "Les prix de l'entretien<br>et de l'hygiène,<br><span class=\"surligne\">livrés chez vous</span>",
       phrase: "Comparez, remplissez votre panier : Tutto Clean vous livre partout en Tunisie.",
@@ -50,7 +50,7 @@
       tuttoPrix: "Tutto Clean : {p} DT + livraison", tuttoChez: "chez Tutto Clean · + livraison", msgTutto: "prix Tutto Clean {p} DT"
     },
     ar: {
-      saut: "انتقل إلى المنتجات", "haut-livraison": "التوصيل إلى كامل تونس", "haut-prix": "أسعار محيّنة كل ليلة", "logo-sous": "توصيل Tutto Clean",
+      saut: "انتقل إلى المنتجات", "haut-livraison": "التوصيل إلى كامل تونس", "haut-livraison-court": "توصيل لكامل تونس", "haut-prix": "أسعار محيّنة كل ليلة", "logo-sous": "توصيل Tutto Clean",
       chercher: "ابحث عن منتج أو علامة…", panier: "السلة", "hero-pastille": "كارفور · جيان · أسعار محيّنة كل ليلة",
       titre: "أسعار مواد التنظيف<br>والنظافة،<br><span class=\"surligne\">تصلك إلى بيتك</span>",
       phrase: "قارن، املأ سلتك: Tutto Clean يوصّل إليك في كامل تونس.",
