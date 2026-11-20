@@ -437,6 +437,17 @@
         body: JSON.stringify({ c: c, g: gouv, l: l, lang: langue }) }).catch(function () { /* carnet injoignable : sans gravité */ });
     } catch (e) { /* navigateur trop ancien : sans gravité */ }
   }
+  // Bouton rond « Partager » (règle commune § 8) : menu de partage du téléphone, sinon WhatsApp ; clic compté dans GoatCounter.
+  // Il partage un LIEN : la page vidéo de présentation (PAGE_VIDEO, dès qu'elle existe) + l'adresse du site.
+  var PAGE_VIDEO = "";
+  function partager() {
+    var site = "https://hygiene.clicvia.com/" + (langue === "ar" ? "?lang=ar" : ""), lien = PAGE_VIDEO || site;
+    var texte = (langue === "ar" ? "أسعار مواد التنظيف والنظافة، تصلك إلى بيتك — Tutto Clean\nالموقع: " : "Les prix de l'entretien et de l'hygiène, livrés chez vous — Tutto Clean\nLe site : ") + site;
+    if (window.goatcounter && goatcounter.count) { try { goatcounter.count({ path: "partage/accueil", title: "Partage", event: true }); } catch (e) { /* compteur absent */ } }
+    function whatsapp() { window.open("https://wa.me/?text=" + encodeURIComponent(PAGE_VIDEO ? texte + "\n" + PAGE_VIDEO : texte), "_blank", "noopener"); }
+    if (navigator.share) navigator.share({ title: "Prix Hygiène & Maison", text: texte, url: lien }).catch(function (e) { if (!e || e.name !== "AbortError") whatsapp(); });
+    else whatsapp();
+  }
   function ouvrirPanier() {
     var d = $("panier");
     try { var cl = JSON.parse(localStorage.getItem("hm_client") || "null"); if (cl) { var f = $("form-commande"); ["nom", "tel", "gouv", "adresse"].forEach(function (k) { if (!f[k].value) f[k].value = cl[k] || ""; }); } } catch (e) { /* rien */ }
@@ -526,6 +537,7 @@
       else if (m) changer(m.getAttribute("data-moins"), -1);
     });
     $("btn-panier").addEventListener("click", ouvrirPanier);
+    $("btn-partager").addEventListener("click", partager);
     $("btn-commander").addEventListener("click", ouvrirPanier);
     $("btn-envoyer").addEventListener("click", envoyer);
     // photo du magasin absente : dessin du rayon à la place (pas de « onerror= » : la CSP l'interdit)

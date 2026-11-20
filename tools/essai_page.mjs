@@ -145,6 +145,9 @@ for (const [nom, w, h, mobile] of [["telephone", 390, 844, true], ["ordinateur",
   verif(await val(`[...document.querySelectorAll("button")].every(b => b.offsetParent === null || (b.scrollWidth <= b.clientWidth + 1 && b.scrollHeight <= b.clientHeight + 1))`), "aucun bouton dont le texte déborde");
   verif((await val(`document.querySelector("#maj").textContent`) || "").includes("Géant : prix du 19/11/2026"), "panne d'une enseigne dite avec la date de ses prix");
   verif(await val(`document.querySelector('.btn-wa').href`) === "https://wa.me/21699453345", "bouton WhatsApp de la boutique");
+  verif(await val(`(() => { const b = document.querySelector(".entete .btn-partager"); const r = b && b.getBoundingClientRect(); return !!b && r.width > 30 && r.top < 120; })()`), "bouton rond « Partager » dans l'en-tête (règle § 8)");
+  await val(`window.__partage = null; window.__ouvertP = []; const so = navigator.share; navigator.share = d => { window.__partage = d; return Promise.resolve(); }; document.querySelector("#btn-partager").click(); navigator.share = so;`);
+  verif((await val(`window.__partage && window.__partage.url`) || "").startsWith("https://hygiene.clicvia.com/"), "« Partager » : lien du site dans le menu du téléphone");
   verif(await val(`document.querySelector('.btn-tel').href`) === "tel:+21699453345", "bouton téléphone 99 453 345");
   verif((await val(`document.querySelector('.btn-carte').href`) || "").includes("0x9df9049a18b3af98"), "lien de l'adresse de la boutique");
   verif(await val(`(() => { const a = document.querySelector('.boutique-carte'); return !!a && a.href.includes("0x9df9049a18b3af98") && a.querySelector('img').src.includes('boutique-carte'); })()`), "carte de la boutique (clic = Google Maps)");
