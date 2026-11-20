@@ -15,7 +15,7 @@
       saut: "Aller aux produits", titre: "Les prix de l'entretien et de l'hygiène, livrés chez vous",
       phrase: "Comparez les grandes surfaces, commandez sur WhatsApp, livraison partout en Tunisie.",
       chercher: "Chercher : lessive, Omo, javel, couches…", "maj-attente": "Prix relevés chaque nuit en grande surface",
-      "boutique-titre": "Commandez, on vous livre",
+      "boutique-titre": "Commandez chez Tutto Clean, on vous livre",
       "boutique-phrase": "Votre commande part sur WhatsApp ; la boutique vous répond avec son prix et la livraison avant de livrer.",
       itineraire: "Adresse de la boutique", tous: "Tous les produits", trier: "Trier",
       "tri-prix": "Prix le plus bas", "tri-unite": "Prix au litre / au kilo / à l'unité", "tri-remise": "En promotion d'abord", "tri-nom": "Marque A → Z",
@@ -39,13 +39,15 @@
       msgTitre: "🧴 Commande {c} — Prix Hygiène & Maison", msgVu: "vu à {p} DT chez {e}", msgTotal: "Total indicatif en grande surface : {t} DT",
       msgNom: "Nom", msgTel: "Téléphone", msgGouv: "Gouvernorat", msgAdr: "Adresse", msgNote: "Remarque",
       msgFin: "Merci de me donner votre prix et les frais de livraison.", unite: { L: "le litre", kg: "le kilo", u: "l'unité", lavage: "le lavage" },
-      sansPrix: "prix à demander"
+      sansPrix: "prix à demander",
+      tuttoPrix: "Tutto Clean : {p} DT + livraison", tuttoChez: "chez Tutto Clean · + livraison",
+      msgTutto: "prix Tutto Clean {p} DT"
     },
     ar: {
       saut: "انتقل إلى المنتجات", titre: "أسعار مواد التنظيف والنظافة، تصلك إلى بيتك",
       phrase: "قارن أسعار المساحات الكبرى، واطلب عبر واتساب، والتوصيل إلى كامل تونس.",
       chercher: "ابحث: غسيل، أومو، جافال، حفاظات…", "maj-attente": "أسعار تُجمع كل ليلة من المساحات الكبرى",
-      "boutique-titre": "اطلب، نوصّل إليك",
+      "boutique-titre": "اطلب من Tutto Clean، نوصّل إليك",
       "boutique-phrase": "يصل طلبك عبر واتساب؛ يرد عليك المحل بسعره وبكلفة التوصيل قبل التسليم.",
       itineraire: "عنوان المحل", tous: "كل المنتجات", trier: "ترتيب",
       "tri-prix": "الأرخص أولاً", "tri-unite": "السعر للتر / للكيلو / للوحدة", "tri-remise": "التخفيضات أولاً", "tri-nom": "العلامة أ ← ي",
@@ -69,10 +71,15 @@
       msgTitre: "🧴 طلب {c} — Prix Hygiène & Maison", msgVu: "سعره {p} د.ت في {e}", msgTotal: "المجموع التقريبي في المساحات الكبرى: {t} د.ت",
       msgNom: "الاسم", msgTel: "الهاتف", msgGouv: "الولاية", msgAdr: "العنوان", msgNote: "ملاحظة",
       msgFin: "أرجو أن تعطيني سعركم وكلفة التوصيل.", unite: { L: "اللتر", kg: "الكيلو", u: "الوحدة", lavage: "الغسلة" },
-      sansPrix: "السعر عند الطلب"
+      sansPrix: "السعر عند الطلب",
+      tuttoPrix: "Tutto Clean: {p} د.ت + التوصيل", tuttoChez: "في Tutto Clean · + التوصيل",
+      msgTutto: "سعر Tutto Clean {p} د.ت"
     }
   };
-  var ENSEIGNES = { carrefour: { fr: "Carrefour", ar: "كارفور" }, geant: { fr: "Géant", ar: "جيان" } };
+  var ENSEIGNES = { carrefour: { fr: "Carrefour", ar: "كارفور" }, geant: { fr: "Géant", ar: "جيان" }, tutto: { fr: "Tutto Clean", ar: "Tutto Clean" } };
+  // Prix de la boutique Tutto Clean (carnet Cloudflare, tapés par la boutique dans son espace privé) ; adresse lue dans la page (les tests la changent)
+  var API_TUTTO = (document.querySelector('meta[name="hm-api"]') || {}).content || "https://api-hygiene.clicvia.com";
+  var tutto = {}, propres = [];
   var GOUVS = [["Tunis", "تونس"], ["Ariana", "أريانة"], ["Ben Arous", "بن عروس"], ["Manouba", "منوبة"], ["Nabeul", "نابل"], ["Zaghouan", "زغوان"],
     ["Bizerte", "بنزرت"], ["Béja", "باجة"], ["Jendouba", "جندوبة"], ["Le Kef", "الكاف"], ["Siliana", "سليانة"], ["Sousse", "سوسة"],
     ["Monastir", "المنستير"], ["Mahdia", "المهدية"], ["Sfax", "صفاقس"], ["Kairouan", "القيروان"], ["Kasserine", "القصرين"], ["Sidi Bouzid", "سيدي بوزيد"],
@@ -175,6 +182,9 @@
     var total = 0; Object.keys(nb).forEach(function (k) { total += nb[k]; });
     var h = '<button type="button" class="famille" data-f="" aria-pressed="' + (filtreFam === "") + '" style="--fa:var(--c-clair);--fc:var(--c-fonce)"><span class="ico">' +
       svg("M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z") + '</span><b>' + esc(t("tout")) + '</b><small>' + (total ? iso(String(total)) : "") + '</small></button>';
+    var nbTutto = propres.length + Object.keys(tutto).length;
+    if (nbTutto) h += '<button type="button" class="famille famille-tutto" data-f="__tutto" aria-pressed="' + (filtreFam === "__tutto") + '" style="--fa:#FFF1D6;--fc:#9A5B00"><span class="ico">' +
+      svg("M3 9l1.5-5h15L21 9M3 9h18M3 9v11h18V9M8 20v-6h8v6") + "</span><b>Tutto Clean</b><small>" + iso(String(nbTutto)) + "</small></button>";
     FAMILLES.forEach(function (f) {
       if (accueil && !nb[f[0]]) return;               // famille sans produit en stock : pas de bouton vide
       h += '<button type="button" class="famille" data-f="' + f[0] + '" aria-pressed="' + (filtreFam === f[0]) + '" style="--fa:' + f[3] + ';--fc:' + f[4] + '"><span class="ico">' +
@@ -185,10 +195,11 @@
   function famille(id) { for (var i = 0; i < FAMILLES.length; i++) if (FAMILLES[i][0] === id) return FAMILLES[i]; return null; }
 
   function liste() {
-    var base = produits || (accueil && accueil.produits) || [];
+    var base = propres.concat(produits || (accueil && accueil.produits) || []);
     if (!produits) preparer(base);
     var r = base.filter(function (p) {
-      if (filtreFam && p.f !== filtreFam) return false;
+      if (filtreFam === "__tutto") { if (!tutto[p.id] && p.e !== "tutto") return false; }
+      else if (filtreFam && p.f !== filtreFam) return false;
       if (texte && !(window.sonRecherche ? sonRecherche.trouve(p._cle, texte) : p._cle.indexOf(texte.toLowerCase()) >= 0)) return false;
       return true;
     });
@@ -212,21 +223,24 @@
       : '<span class="sans">' + svg((famille(p.f) || [0, 0, 0, 0, 0, ICONE_SANS])[5], 96) + '</span>';
     var unite = p.pu ? '<span class="unite">' + dt(p.pu[0]) + " DT / " + esc((t("unite") || {})[p.pu[1]] || p.pu[1]) + '</span>' : "";
     var ou = t("chez") + " <b>" + esc(nomEnseigne(p.e)) + "</b>" + (p.nb && p.nb[1] > 1 ? " · " + esc(t("magasins", { n: iso(String(p.nb[0])), m: iso(String(p.nb[1])) })) : "");
+    var tc = tutto[p.id], ligneTutto = tc ? '<span class="tutto">' + esc(t("tuttoPrix", { p: dt(tc.p) })) + "</span>" : "";
+    if (p.e === "tutto") ou = esc(t("tuttoChez"));
     var ajout = q ? '<div class="qtes"><button type="button" data-moins="' + esc(p.id) + '" aria-label="' + esc(t("moins")) + '">−</button><span>' + q + '</span><button type="button" data-plus="' + esc(p.id) + '" aria-label="' + esc(t("plus")) + '">+</button></div>'
       : '<button type="button" class="btn-ajout" data-plus="' + esc(p.id) + '">+ ' + esc(t("ajouter")) + '</button>';
     return '<article class="carte" data-id="' + esc(p.id) + '">' + (rem >= 0.02 ? '<span class="badge-promo">−' + Math.round(rem * 100) + " %</span>" : "") +
       '<div class="photo">' + photo + '</div><div class="corps">' + (p.m ? '<span class="marque">' + esc(p.m) + "</span>" : "") +
       '<span class="nom" title="' + esc(p.n) + '">' + esc(p.n) + "</span>" + (p.q ? '<span class="qte">' + esc(p.q) + "</span>" : "") +
       '<div class="prix-l"><span class="prix">' + dt(p.p) + " <small>DT</small></span>" + (rem >= 0.02 ? '<span class="barre">' + dt(p.r) + " DT</span>" : "") + "</div>" +
-      unite + '<span class="ou">' + ou + '</span><div class="ajout">' + ajout + "</div></div></article>";
+      unite + '<span class="ou">' + ou + "</span>" + ligneTutto + '<div class="ajout">' + ajout + "</div></div></article>";
   }
 
   function afficher() {
     var g = $("grille"); if (!g) return;
     var fam = famille(filtreFam);
-    $("liste-titre").textContent = fam ? (langue === "ar" ? fam[2] : fam[1]) : t("tous");
+    $("liste-titre").textContent = filtreFam === "__tutto" ? "Tutto Clean" : fam ? (langue === "ar" ? fam[2] : fam[1]) : t("tous");
     if (!accueil && !produits) { g.innerHTML = '<p class="chargement">' + esc(t("chargement")) + "</p>"; return; }
     var r = liste();
+    if (filtreFam === "__tutto" && !produits) toutCharger();
     var vrai = produits ? r.length : null;
     if (!produits && (filtreFam || texte)) toutCharger();          // un filtre a besoin de toute la liste
     var cpt = produits ? r.length : (accueil.total || r.length);
@@ -241,13 +255,14 @@
   function lirePanier() { try { return JSON.parse(localStorage.getItem(CLE_PANIER)) || {}; } catch (e) { return {}; } }
   function garderPanier() { try { localStorage.setItem(CLE_PANIER, JSON.stringify(panier)); } catch (e) { /* téléphone sans stockage : le panier vit le temps de la page */ } }
   function trouver(id) {
-    var l = (produits || []).concat((accueil && accueil.produits) || []);
+    var l = propres.concat(produits || [], (accueil && accueil.produits) || []);
     for (var i = 0; i < l.length; i++) if (l[i].id === id) return l[i];
     return null;
   }
   function changer(id, d) {
     var p = trouver(id), ligne = panier[id];
     if (!ligne && p) ligne = panier[id] = { q: 0, n: p.n, m: p.m || "", qt: p.q || "", p: p.p, e: p.e, i: p.i || "" };
+    if (ligne) ligne.tp = tutto[id] ? tutto[id].p : (ligne.e === "tutto" ? ligne.p : null);   // prix Tutto Clean du moment
     if (!ligne) return;
     ligne.q = Math.max(0, Math.min(99, ligne.q + d));
     if (!ligne.q) delete panier[id];
@@ -264,9 +279,9 @@
     if (!ids.length) { ul.innerHTML = '<li class="vide">' + esc(t("panierVide")) + "</li>"; $("panier-estim").hidden = true; return; }
     var total = 0;
     ul.innerHTML = ids.map(function (id) {
-      var l = panier[id]; total += (l.p || 0) * l.q;
+      var l = panier[id]; total += (l.tp || l.p || 0) * l.q;
       return '<li>' + (l.i ? '<img src="' + esc(l.i) + '" alt="">' : "") + '<span class="pl-nom">' + esc((l.m ? l.m + " " : "") + l.n) +
-        "<small>" + esc(l.qt) + (l.p ? " · " + dt(l.p) + " DT " + esc(t("chez")) + " " + esc(nomEnseigne(l.e)) : "") + "</small></span>" +
+        "<small>" + esc(l.qt) + (l.tp ? " · " + esc(t("tuttoPrix", { p: dt(l.tp) })) : l.p ? " · " + dt(l.p) + " DT " + esc(t("chez")) + " " + esc(nomEnseigne(l.e)) : "") + "</small></span>" +
         '<span class="qtes"><button type="button" data-moins="' + esc(id) + '" aria-label="' + esc(t("moins")) + '">−</button><span>' + l.q +
         '</span><button type="button" data-plus="' + esc(id) + '" aria-label="' + esc(t("plus")) + '">+</button></span></li>';
     }).join("");
@@ -288,9 +303,9 @@
   function messageCommande(c, f) {
     var lignes = [t("msgTitre", { c: c }), ""], total = 0, i = 0;
     Object.keys(panier).forEach(function (id) {
-      var l = panier[id]; i++; total += (l.p || 0) * l.q;
+      var l = panier[id]; i++; total += (l.tp || l.p || 0) * l.q;
       lignes.push(i + ". " + l.q + " × " + (l.m ? l.m + " " : "") + l.n + (l.qt && l.n.indexOf(l.qt) < 0 ? " (" + l.qt + ")" : "") +
-        (l.p ? " — " + t("msgVu", { p: dt(l.p), e: nomEnseigne(l.e) }) : ""));
+        (l.tp ? " — " + t("msgTutto", { p: dt(l.tp) }) : l.p ? " — " + t("msgVu", { p: dt(l.p), e: nomEnseigne(l.e) }) : ""));
     });
     lignes.push("", t("msgTotal", { t: dt(total) }), "",
       t("msgNom") + " : " + f.nom, t("msgTel") + " : " + f.tel, t("msgGouv") + " : " + f.gouv, t("msgAdr") + " : " + f.adresse);
@@ -326,6 +341,7 @@
       "<b>Promotion</b> : la remise en rouge (−20 %) vient du prix barré écrit par le magasin.",
       "<b>Recherche</b> : par produit ou par marque, même avec une autre écriture (Omo, Ariel, Dixan…).",
       "<b>Commander</b> : le bouton « Ajouter » met le produit dans votre panier (gardé dans votre téléphone). « Commander » prépare un message WhatsApp avec un numéro de commande, vos produits et votre adresse : vous l'envoyez vous-même. La boutique vous répond avec SON prix et les frais de livraison (toute la Tunisie) ; rien n'est payé sur le site.",
+      "<b>Tutto Clean</b> : la boutique qui livre tape elle-même ses prix (sans la livraison) dans son espace privé ; ils s'affichent tout de suite à côté de ceux des grandes surfaces, avec le bouton « Tutto Clean » pour voir tous ses produits. Le panier prend le prix Tutto Clean quand il existe.",
       "<b>Panne d'un magasin</b> : si un site de magasin ne répond pas, ses derniers prix restent affichés avec leur date.",
       "<b>Vos données</b> : aucun compte, aucun cookie ; votre nom et votre adresse restent dans votre téléphone et ne partent que dans le message WhatsApp que vous envoyez. Visites comptées sans cookie (GoatCounter)."
     ];
@@ -336,6 +352,7 @@
       "<b>التخفيض</b>: النسبة الحمراء تأتي من السعر المشطوب الذي كتبه المتجر.",
       "<b>البحث</b>: بالمنتج أو بالعلامة، حتى بكتابة مختلفة.",
       "<b>الطلب</b>: زر «أضف» يضع المنتج في سلتك (محفوظة في هاتفك). «اطلب» يحضّر رسالة واتساب برقم الطلب ومنتجاتك وعنوانك: ترسلها بنفسك. يرد عليك المحل بسعره هو وبكلفة التوصيل (كامل تونس)؛ لا دفع في الموقع.",
+      "<b>Tutto Clean</b>: المحل الذي يوصّل يكتب أسعاره بنفسه (دون التوصيل) في فضائه الخاص؛ تظهر فورًا بجانب أسعار المساحات الكبرى، مع زر «Tutto Clean» لرؤية كل منتجاته. السلة تأخذ سعر Tutto Clean إن وُجد.",
       "<b>عطل في متجر</b>: إذا لم يرد موقع متجر، تبقى آخر أسعاره معروضة مع تاريخها.",
       "<b>معطياتك</b>: لا حساب ولا ملفات تعريف ارتباط؛ اسمك وعنوانك يبقيان في هاتفك ولا يخرجان إلا في رسالة واتساب التي ترسلها. الزيارات تُعدّ دون ملفات تعريف (GoatCounter)."
     ];
@@ -385,6 +402,17 @@
     langue = l === "ar" ? "ar" : "fr";
     brancher();
     appliquerLangue();
+    fetch(API_TUTTO + "/prix", { cache: "no-cache" }).then(function (r) { return r.ok ? r.json() : { produits: [] }; }).then(function (d) {
+      tutto = {}; propres = [];
+      (d.produits || []).forEach(function (p) {
+        if (p.s === false || !p.p) return;                                   // « en stock » décoché : rien sur le site
+        if (p.id.indexOf("tc:") === 0) propres.push({ id: p.id, e: "tutto", n: p.n, m: p.m, f: p.f, q: p.q, p: p.p, i: p.i ? API_TUTTO + "/photo/" + encodeURIComponent(p.id) : "" });
+        else tutto[p.id] = p;
+      });
+      preparer(propres);
+      Object.keys(panier).forEach(function (id) { panier[id].tp = tutto[id] ? tutto[id].p : (panier[id].e === "tutto" ? panier[id].p : null); });
+      garderPanier(); afficherFamilles(); afficher(); afficherPanier();
+    }).catch(function () { /* carnet Tutto Clean injoignable : le site marche avec les prix des magasins */ });
     charger("data/accueil.json").then(function (d) { accueil = d; preparer(d.produits || []); afficherFamilles(); afficherMaj(); afficher(); })
       .catch(function () { $("grille").innerHTML = '<p class="vide">' + esc(t("aucun")) + "</p>"; });
     if ("serviceWorker" in navigator && location.protocol === "https:") {

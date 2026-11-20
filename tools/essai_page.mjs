@@ -33,13 +33,41 @@ writeFileSync(join(dossier, "data", "accueil.json"), JSON.stringify({ date: "202
   enseignes: { carrefour: { offres: 47, erreur: null, derniere_reussite: "2026-11-20" }, geant: { offres: 23, erreur: "délai", derniere_reussite: "2026-11-19" } },
   produits: produits.slice(0, 24).map(({ u, ...p }) => p) }));
 
+// ---------- faux carnet Tutto Clean (jamais le vrai : l'adresse du carnet est remplacée dans la copie du site)
+for (const page of ["index.html", "tutto-clean/index.html"]) {
+  const f = join(dossier, page);
+  writeFileSync(f, readFileSync(f, "utf8").replace(/<meta name="hm-api" content="[^"]*">/, '<meta name="hm-api" content="/__tutto">'));
+}
+const carnet = { maj: "2026-11-20T10:00:00Z", produits: [
+  { id: "cf:3", n: produits[3].n, m: produits[3].m, f: produits[3].f, q: produits[3].q, p: 1.234, s: true },
+  { id: "tc:propre1", n: "Savon noir artisanal", m: "TUTTO", f: "corps", q: "500 g", p: 4.5, s: true },
+  { id: "cf:4", n: produits[4].n, m: produits[4].m, f: produits[4].f, q: produits[4].q, p: 9.9, s: false } ] };
+const BON_CODE = "tc-essai123";
+function fauxCarnet(req, res, chemin) {
+  res.setHeader("Content-Type", "application/json");
+  const bon = req.headers["x-code"] === BON_CODE;
+  if (req.method === "GET" && chemin === "/__tutto/prix") return res.end(JSON.stringify({ ...carnet, produits: carnet.produits.filter(p => p.p != null) }));
+  if (req.method === "POST" && chemin === "/__tutto/verifier") { res.statusCode = bon ? 200 : 403; return res.end(JSON.stringify({ ok: bon })); }
+  if (req.method === "POST" && chemin === "/__tutto/prix") {
+    let corps = ""; req.on("data", c => { corps += c; }); req.on("end", () => {
+      if (!bon) { res.statusCode = 403; return res.end('{"erreur":"code"}'); }
+      const b = JSON.parse(corps), i = carnet.produits.findIndex(p => p.id === b.id);
+      if (b.p == null) { if (i >= 0) carnet.produits.splice(i, 1); } else if (i >= 0) carnet.produits[i] = b; else carnet.produits.push(b);
+      res.end('{"ok":true}');
+    });
+    return;
+  }
+  res.statusCode = 404; res.end("{}");
+}
+
 // ---------- petit serveur local (fetch() refuse file://) qui compte les fichiers demandés
 const demandes = [];
 const TYPES = { ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".css": "text/css", ".json": "application/json", ".svg": "image/svg+xml", ".webmanifest": "application/manifest+json" };
 const srv = http.createServer((req, res) => {
   const chemin = req.url.split("?")[0];
   demandes.push(chemin);
-  const f = resolve(dossier, "." + (chemin === "/" ? "/index.html" : chemin));
+  if (chemin.startsWith("/__tutto/")) return fauxCarnet(req, res, chemin);
+  const f = resolve(dossier, "." + (chemin.endsWith("/") ? chemin + "index.html" : chemin));
   try { res.setHeader("Content-Type", TYPES[f.slice(f.lastIndexOf("."))] || "application/octet-stream"); res.end(readFileSync(f)); }
   catch { res.statusCode = 404; res.end(); }
 });
@@ -84,7 +112,10 @@ for (const [nom, w, h, mobile] of [["telephone", 390, 844, true], ["ordinateur",
   await cmd("Page.navigate", { url }); await pause(1500);
   verif(!demandes.includes("/data/produits.json"), "accueil léger : liste complète pas chargée avant le 1er geste");
   verif(await val(`document.querySelectorAll("#grille .carte").length`) === 24, "24 cartes à l'accueil");
-  verif(await val(`document.querySelectorAll("#familles .famille").length`) === 14, "bouton « Tout » + 13 familles");
+  verif(await val(`document.querySelectorAll("#familles .famille").length`) === 15, "boutons « Tout », « Tutto Clean » et 13 familles");
+  verif((await val(`document.querySelector('#familles [data-f="__tutto"] small')?.textContent`)) === "2", "Tutto Clean : 2 produits (« en stock » décoché = caché)");
+  verif((await val(`document.querySelector('.carte[data-id="cf:3"] .tutto')?.textContent`) || "").includes("1,234 DT + livraison"), "carte : prix Tutto Clean + livraison");
+  verif(!(await val(`!!document.querySelector('.carte[data-id="cf:4"] .tutto')`)), "produit décoché « en stock » : pas de prix Tutto Clean");
   verif(await val(`document.querySelector("#panier-nb").hidden`), "panier vide : pas de « 0 » sur le bouton");
   verif(await val(`[...document.querySelectorAll("button")].every(b => b.offsetParent === null || (b.scrollWidth <= b.clientWidth + 1 && b.scrollHeight <= b.clientHeight + 1))`), "aucun bouton dont le texte déborde");
   verif((await val(`document.querySelector("#maj").textContent`) || "").includes("Géant : prix du 19/11/2026"), "panne d'une enseigne dite avec la date de ses prix");
@@ -150,6 +181,18 @@ for (const [nom, w, h, mobile] of [["telephone", 390, 844, true], ["ordinateur",
   verif(msg.includes("2 × ") && msg.includes("Sami Test") && msg.includes("Sfax") && msg.includes("Rue de l'essai"), "message : quantités, nom, gouvernorat, adresse");
   verif(msg.includes("votre prix et les frais de livraison"), "message : demande le prix de la boutique et la livraison");
   await val(`document.querySelector("#panier").close()`);
+  // Tutto Clean : son bouton, son produit propre, le panier au prix de la boutique
+  await val(`document.querySelector('#familles [data-f="__tutto"]').click()`); await pause(500);
+  const ids = await val(`[...document.querySelectorAll("#grille .carte")].map(c => c.dataset.id).sort().join(",")`);
+  verif(ids === "cf:3,tc:propre1", `bouton Tutto Clean : ses 2 produits (${ids})`);
+  verif((await val(`document.querySelector('.carte[data-id="tc:propre1"] .ou')?.textContent`) || "").includes("Tutto Clean"), "produit propre : « chez Tutto Clean · + livraison »");
+  await val(`document.querySelector('.carte[data-id="tc:propre1"] [data-plus]').click()`); await pause(200);
+  await val(`document.querySelector("#btn-commander").click()`); await pause(300);
+  await val(`window.__ouvert = []; document.querySelector("#btn-envoyer").click()`);
+  const msg2 = decodeURIComponent(((await val(`window.__ouvert[0] || ""`)).split("?text=")[1] || ""));
+  verif(msg2.includes("Savon noir artisanal") && msg2.includes("prix Tutto Clean 4,500 DT"), "message : produit Tutto Clean à son prix");
+  await val(`document.querySelector("#panier").close()`);
+  await val(`document.querySelector('#familles [data-f=""]').click()`); await pause(300);
   // « Comment fonctionne ce site ? »
   const comment = await val(`document.querySelector("#comment-corps").textContent`);
   for (const [, attendu] of FONCTIONS) verif(comment.toLowerCase().includes(attendu.toLowerCase()), `explication : « ${attendu} »`);
@@ -168,6 +211,35 @@ for (const [nom, w, h, mobile] of [["telephone", 390, 844, true], ["ordinateur",
   await val(`document.querySelector("#btn-langue").click()`); await pause(300);
   verif(await val(`document.documentElement.dir === "ltr"`), "retour au français");
 }
+// ---------- Espace Tutto Clean (page privée), au téléphone
+console.log("\n== Espace Tutto Clean (390 px)");
+await cmd("Emulation.setDeviceMetricsOverride", { width: 390, height: 844, deviceScaleFactor: 1, mobile: true });
+await cmd("Page.navigate", { url: url + "tutto-clean/" }); await pause(1200);
+await val(`localStorage.clear()`);
+verif(await val(`document.querySelector('meta[name="robots"]').content.includes("noindex")`), "page privée : pas dans Google (noindex)");
+await val(`document.querySelector("#code").value = "mauvais"; document.querySelector("#form-code").requestSubmit()`); await pause(600);
+verif(await val(`!document.querySelector("#erreur-code").hidden && document.querySelector("#espace").hidden`), "mauvais code : refusé");
+await val(`document.querySelector("#code").value = "${BON_CODE}"; document.querySelector("#form-code").requestSubmit()`); await pause(1500);
+verif(await val(`!document.querySelector("#espace").hidden`), "bon code : espace ouvert");
+verif(await val(`document.querySelector("#resume").textContent.includes("3 produits")`), "résumé : ses 3 produits");
+verif(await val(`document.querySelectorAll("#lignes .ligne").length`) === 30, "30 produits par page");
+await val(`document.querySelector("#seulement-miens").click()`); await pause(300);
+verif(await val(`document.querySelectorAll("#lignes .ligne").length`) === 3, "« Seulement mes produits » : 3");
+await val(`document.querySelector("#seulement-miens").click()`); await pause(300);
+await val(`(() => { const q = document.querySelector("#q"); q.value = "${produits[7].n}"; q.dispatchEvent(new Event("input")); })()`); await pause(500);
+await val(`(() => { const li = document.querySelector('.ligne[data-id="cf:7"]'); li.querySelector("input[type=text]").value = "abc"; li.querySelector(".enr").click(); })()`); await pause(300);
+verif((await val(`document.querySelector('.ligne[data-id="cf:7"] .etat').textContent`)).includes("illisible"), "prix illisible : refusé avant l'envoi");
+await val(`(() => { const li = document.querySelector('.ligne[data-id="cf:7"]'); li.querySelector("input[type=text]").value = "7,5"; li.querySelector(".enr").click(); })()`); await pause(800);
+verif(carnet.produits.some(p => p.id === "cf:7" && p.p === 7.5), "prix « 7,5 » enregistré dans le carnet (7,500 DT)");
+verif((await val(`document.querySelector('.ligne[data-id="cf:7"] .etat').textContent`)).includes("Enregistré"), "« Enregistré ✓ » affiché");
+await val(`document.querySelector('.ligne[data-id="cf:7"] .ret').click()`); await pause(800);
+verif(!carnet.produits.some(p => p.id === "cf:7"), "« Retirer » : prix enlevé du carnet");
+await val(`(() => { document.querySelector("#bloc-ajout").open = true; const f = document.querySelector("#form-ajout");
+  f.n.value = "Javel maison 5L"; f.m.value = "tutto"; f.f.value = "javel"; f.q.value = "5 L"; f.p.value = "6,250"; f.requestSubmit(); })()`); await pause(900);
+const ajoute = carnet.produits.find(p => p.n === "Javel maison 5L");
+verif(ajoute && ajoute.id.startsWith("tc:") && ajoute.p === 6.25 && ajoute.f === "javel" && ajoute.m === "TUTTO", "produit ajouté dans le carnet (tc:…, 6,250 DT, Javel, marque TUTTO)");
+verif(await val(`document.documentElement.scrollWidth <= innerWidth`), "espace : rien ne dépasse de l'écran");
+await capture("tutto-espace");
 verif(erreurs.length === 0, `aucune erreur JavaScript${erreurs.length ? " : " + erreurs.join(" | ") : ""}`);
 chrome.kill(); srv.close(); ws.close();
 console.log(`\nCaptures : ${captures}`);

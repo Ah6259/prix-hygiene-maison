@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="fr" translate="no">
+<head>
+<meta charset="utf-8">
+<meta name="google" content="notranslate">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://api-hygiene.clicvia.com; connect-src 'self' https://api-hygiene.clicvia.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="hm-api" content="https://api-hygiene.clicvia.com">
+<meta name="robots" content="noindex, nofollow, noai, noimageai">
+<title>Espace Tutto Clean — mes prix</title>
+<link rel="icon" type="image/svg+xml" href="../assets/icons/icon.svg">
+<link rel="apple-touch-icon" href="../assets/icons/apple-touch-icon.png">
+<meta name="theme-color" content="#0B6E6E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&amp;display=swap">
+<link rel="stylesheet" href="../style.css?v=20261120c">
+<link rel="stylesheet" href="tutto.css?v=20261120c">
+</head>
+<body class="espace">
+<header class="entete">
+  <div class="entete-in">
+    <a class="logo" href="../" aria-label="Voir le site public">
+      <img src="../assets/icons/icon.svg" width="40" height="40" alt="">
+      <span class="logo-txt"><b>Espace</b> <i>Tutto Clean</i></span>
+    </a>
+    <button type="button" class="btn-langue" id="btn-sortir" hidden>Fermer</button>
+  </div>
+</header>
+
+<main>
+  <section class="carte-code" id="ecran-code">
+    <h1>Mes prix sur le site</h1>
+    <p>Tapez le code de la boutique.</p>
+    <form id="form-code" autocomplete="off">
+      <input id="code" type="password" inputmode="text" autocapitalize="none" spellcheck="false" placeholder="Code" aria-label="Code de la boutique" required>
+      <label class="souvenir"><input type="checkbox" id="souvenir" checked> Se souvenir sur ce téléphone</label>
+      <button type="submit" class="btn-envoyer">Ouvrir</button>
+      <p class="erreur" id="erreur-code" role="alert" hidden></p>
+    </form>
+  </section>
+
+  <section id="espace" hidden>
+    <div class="resume" id="resume"></div>
+
+    <details class="bloc-ajout" id="bloc-ajout">
+      <summary>➕ Ajouter un produit qui n'est pas dans la liste</summary>
+      <form id="form-ajout" class="champs ajout-champs" autocomplete="off">
+        <label><span>Nom du produit</span><input name="n" required maxlength="120" placeholder="Ex. : Lessive liquide lavande"></label>
+        <label><span>Marque</span><input name="m" maxlength="40" placeholder="Ex. : LILAS"></label>
+        <label><span>Famille</span><select name="f" id="ajout-famille" required></select></label>
+        <label><span>Contenance</span><input name="q" maxlength="40" placeholder="Ex. : 3 L, 1 kg, 12 rouleaux"></label>
+        <label><span>Mon prix (DT, sans livraison)</span><input name="p" inputmode="decimal" required placeholder="Ex. : 9,500"></label>
+        <label><span>Photo (facultatif)</span><input name="photo" type="file" accept="image/*" capture="environment"></label>
+        <button type="submit" class="btn-envoyer">Ajouter sur le site</button>
+        <p class="erreur" id="erreur-ajout" role="alert" hidden></p>
+      </form>
+    </details>
+
+    <div class="outils">
+      <input type="search" id="q" placeholder="Chercher : Omo, javel 3L, Lilas…" aria-label="Chercher un produit">
+      <label class="seul"><input type="checkbox" id="seulement-miens"> Seulement mes produits</label>
+    </div>
+    <nav class="familles" id="familles" aria-label="Familles"></nav>
+    <p class="compte" id="compte"></p>
+    <ul class="lignes" id="lignes"></ul>
+    <div class="plus-zone"><button type="button" class="btn-plus" id="btn-plus" hidden>Voir plus</button></div>
+    <p class="note">Tapez votre prix (sans la livraison) puis « Enregistrer » : il apparaît tout de suite sur le site, à côté de Carrefour et Géant,
+      avec « + livraison ». Décochez « En stock » quand vous n'en avez plus ; « Retirer » enlève votre prix du site.</p>
+  </section>
+</main>
+<script src="../assets/son.js?v=20261120a"></script>
+<script src="tutto.js?v=20261120c"></script>
+</body>
+</html>

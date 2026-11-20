@@ -111,6 +111,8 @@ button,input,select,textarea{font:inherit;color:inherit}
 .carte .unite{font-size:11.5px;color:var(--doux);white-space:nowrap}
 .carte .ou{font-size:11.5px;color:var(--doux);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .carte .ou b{color:var(--texte)}
+.carte .tutto{display:block;margin-top:4px;background:#FFF1D6;color:#7A4A00;border-radius:8px;padding:4px 7px;font-size:12.5px;font-weight:800;line-height:1.25}
+@media (prefers-color-scheme:dark){.carte .tutto{background:#3A2E14;color:#F6C766}}
 .badge-promo{position:absolute;top:8px;inset-inline-start:8px;background:var(--corail);color:#fff;font-size:12px;font-weight:800;border-radius:999px;padding:2px 8px}
 .ajout{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:6px}
 .btn-ajout{flex:1;border:0;border-radius:10px;background:var(--c);color:#fff;font-weight:800;padding:9px 6px;cursor:pointer;font-size:14px}
