@@ -85,6 +85,8 @@ for (const [nom, w, h, mobile] of [["telephone", 390, 844, true], ["ordinateur",
   verif(!demandes.includes("/data/produits.json"), "accueil léger : liste complète pas chargée avant le 1er geste");
   verif(await val(`document.querySelectorAll("#grille .carte").length`) === 24, "24 cartes à l'accueil");
   verif(await val(`document.querySelectorAll("#familles .famille").length`) === 14, "bouton « Tout » + 13 familles");
+  verif(await val(`document.querySelector("#panier-nb").hidden`), "panier vide : pas de « 0 » sur le bouton");
+  verif(await val(`[...document.querySelectorAll("button")].every(b => b.offsetParent === null || (b.scrollWidth <= b.clientWidth + 1 && b.scrollHeight <= b.clientHeight + 1))`), "aucun bouton dont le texte déborde");
   verif((await val(`document.querySelector("#maj").textContent`) || "").includes("Géant : prix du 19/11/2026"), "panne d'une enseigne dite avec la date de ses prix");
   verif(await val(`document.querySelector('.btn-wa').href`) === "https://wa.me/21699453345", "bouton WhatsApp de la boutique");
   verif(await val(`document.querySelector('.btn-tel').href`) === "tel:+21699453345", "bouton téléphone 99 453 345");

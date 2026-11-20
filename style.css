@@ -47,7 +47,7 @@ button,input,select,textarea{font:inherit;color:inherit}
   .btn-panier{width:40px}
 }
 @media (max-width:350px){.logo-txt i{display:none}}
-.panier-nb{position:absolute;top:-6px;inset-inline-end:-6px;background:var(--or);color:#3a2600;font-size:12px;font-weight:800;border-radius:999px;min-width:20px;height:20px;padding:0 5px;display:grid;place-items:center}
+.panier-nb{position:absolute;top:2px;inset-inline-end:2px;background:var(--or);color:#3a2600;font-size:11px;line-height:1;font-weight:800;border-radius:999px;min-width:17px;height:17px;padding:0 4px;display:grid;place-items:center}
 
 /* Haut de page (sans image décorative, règle § 22) */
 .hero{background:linear-gradient(160deg,var(--c-fonce),var(--c) 70%);color:#fff}

@@ -258,7 +258,7 @@
   function nbArticles() { var n = 0; Object.keys(panier).forEach(function (k) { n += panier[k].q; }); return n; }
   function afficherPanier() {
     var n = nbArticles();
-    $("panier-nb").textContent = n; $("bp-nb").textContent = n;
+    $("panier-nb").textContent = n; $("panier-nb").hidden = !n; $("bp-nb").textContent = n;
     $("barre-panier").hidden = !n; document.body.classList.toggle("a-panier", !!n);
     var ul = $("panier-liste"), ids = Object.keys(panier);
     if (!ids.length) { ul.innerHTML = '<li class="vide">' + esc(t("panierVide")) + "</li>"; $("panier-estim").hidden = true; return; }
