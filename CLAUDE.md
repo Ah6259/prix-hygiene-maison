@@ -54,3 +54,14 @@ et modèle « suivi de prix » : dépôt privé projets-ahmed (dossier parent `_
   `deployer.sh` de la session, empreintes des deux codes, jamais les codes).
 - Photos : 1re copie depuis le PC par paquets (`HM_PHOTOS_MAX`, photos vues d'abord) ; le robot de nuit ne copie ensuite que les nouvelles.
 - RESTE : vidéo de présentation (format Reel) + page `video/` + lien en bas + vidéo du portail.
+
+## 21/11/2026 (soir)
+- Vidéo de présentation (`assets/video/`, scénario `hygiene` de `videos (outil)/sites_services.py`, refaite par `python fabriquer.py hygiene`) +
+  page `video/` écrite à la main (video.js : Partager ; `assets/video-son.js` = SON_JS commun) ; `PAGE_VIDEO` d'app.js ; lien « Vidéo de présentation ».
+- Photos : `adresses_photo()` (Géant large -> home) ; produits sans photo = `sansPhoto()` (marque en grand) ; photo de carte en absolu dans un carré fixe.
+- Plus de lien « Tous nos services » (Ahmed) : exception `SANS_LIEN_PORTAIL` de controle.mjs ; 404 installée avec `--sans-portail`, couleur #0D1B3E.
+- Barre du haut : `texte-court` au téléphone (!important), essai « rien de coupé ». « shampooing » partout dans nos textes.
+- Contrôle complet (§ 63) : ANOMALIES 0 le 21/11/2026.
+- Photos QUI BOUGENT dans le bandeau (règle du 16/10, oubliée puis faite le 21/11) : 2 rangées au PC, 1 au téléphone (`hm-defile`), pause au toucher ;
+  contrôle complet n° 13. Robot commun « Relance de la publication » (`relance-pages.yml`, contrôle n° 12).
+- Ahmed (21/11) : PLUS de « livré par Tutto Clean » sous le logo ; au téléphone, boutons du bandeau pleine largeur et photos entières (30vw).
