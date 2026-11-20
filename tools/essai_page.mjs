@@ -132,7 +132,11 @@ for (const [nom, w, h, mobile] of [["telephone", 390, 844, true], ["ordinateur",
   await val(`localStorage.clear()`);
   await cmd("Page.navigate", { url }); await pause(1500);
   verif(!demandes.includes("/data/produits.json"), "accueil léger : liste complète pas chargée avant le 1er geste");
-  verif(await val(`document.querySelectorAll("#grille .carte").length`) === 24, "24 cartes à l'accueil");
+  verif(await val(`document.querySelector("#produits").hidden`), "accueil : pas de liste complète d'office");
+  verif(await val(`(() => { const b = document.querySelector("#boutique"), h = document.querySelector(".hero"); return !!b && !!h && b.getBoundingClientRect().top > h.getBoundingClientRect().top && b.getBoundingClientRect().top < document.querySelector("#t-rayons").getBoundingClientRect().top; })()`), "accueil : la boutique Tutto Clean juste après le bandeau, avant les rayons");
+  verif((await val(`document.querySelector('.hero .btn-orange').href`) || "").startsWith("https://wa.me/21699453345"), "bandeau : « Commander chez Tutto Clean »");
+  await val(`document.querySelector("#voir-tous").click()`); await pause(300);
+  verif(await val(`document.querySelectorAll("#grille .carte").length`) === 24, "« Voir tous les produits » : 24 cartes");
   verif(await val(`document.querySelectorAll("#familles .famille").length`) === 15, "boutons « Tout », « Tutto Clean » et 13 familles");
   verif((await val(`document.querySelector('#familles [data-f="__tutto"] small')?.textContent`)) === "2", "Tutto Clean : 2 produits (« en stock » décoché = caché)");
   verif((await val(`document.querySelector('.carte[data-id="cf:3"] .tutto')?.textContent`) || "").includes("1,234 DT + livraison"), "carte : prix Tutto Clean + livraison");
@@ -187,6 +191,7 @@ for (const [nom, w, h, mobile] of [["telephone", 390, 844, true], ["ordinateur",
   verif(await val(`[...document.querySelectorAll("#grille .carte .ou")].every(o => o.textContent.includes("Géant"))`), "filtre magasin : seulement Géant");
   await val(`(() => { const s = document.querySelector("#magasin"); s.value = ""; s.dispatchEvent(new Event("change")); })()`); await pause(300);
   await val(`document.querySelector('#familles [data-f=""]').click()`); await pause(300);
+  await val(`document.querySelector("#voir-tous").click()`); await pause(300);
   // « Voir plus »
   await val(`document.querySelector('#btn-plus').click()`); await pause(300);
   verif(await val(`document.querySelectorAll("#grille .carte").length`) === 48, "« Voir plus » ajoute 24 produits");

@@ -16,7 +16,7 @@
       chercher: "Rechercher un produit, une marque…", panier: "Panier", "hero-pastille": "Carrefour · Géant · prix vérifiés chaque nuit",
       titre: "Les prix de l'entretien<br>et de l'hygiène,<br><span class=\"surligne\">livrés chez vous</span>",
       phrase: "Comparez, remplissez votre panier : Tutto Clean vous livre partout en Tunisie.",
-      "hero-promos": "Voir les promotions", "hero-wa": "Commander sur WhatsApp",
+      "hero-promos": "Voir les promotions", "hero-wa": "Commander sur WhatsApp", "hero-commander": "Commander chez Tutto Clean", "hero-boutique": "🏪 La boutique Tutto Clean", "boutique-sur": "🏪 Votre boutique", "voir-tous": "Voir tous les produits",
       "p1-t": "Prix vérifiés chaque nuit", p1: "Carrefour et Géant, produits en stock", "p2-t": "Livré chez vous", p2: "Partout en Tunisie, frais donnés avant",
       "p3-t": "Commande en 1 minute", p3: "Sur WhatsApp, sans compte",
       "rayons-titre": "Nos rayons", "rayons-sous": "Tout pour la maison et l'hygiène, rangé comme en magasin.",
@@ -54,7 +54,7 @@
       chercher: "ابحث عن منتج أو علامة…", panier: "السلة", "hero-pastille": "كارفور · جيان · أسعار محيّنة كل ليلة",
       titre: "أسعار مواد التنظيف<br>والنظافة،<br><span class=\"surligne\">تصلك إلى بيتك</span>",
       phrase: "قارن، املأ سلتك: Tutto Clean يوصّل إليك في كامل تونس.",
-      "hero-promos": "شاهد التخفيضات", "hero-wa": "اطلب عبر واتساب",
+      "hero-promos": "شاهد التخفيضات", "hero-wa": "اطلب عبر واتساب", "hero-commander": "اطلب من Tutto Clean", "hero-boutique": "🏪 محل Tutto Clean", "boutique-sur": "🏪 محلّك", "voir-tous": "عرض كل المنتجات",
       "p1-t": "أسعار محيّنة كل ليلة", p1: "كارفور وجيان، المنتجات المتوفرة", "p2-t": "توصيل إلى بيتك", p2: "إلى كامل تونس، الكلفة تُعطى مسبقًا",
       "p3-t": "طلب في دقيقة", p3: "عبر واتساب، دون حساب",
       "rayons-titre": "أقسامنا", "rayons-sous": "كل ما يلزم للبيت والنظافة، مرتّب كما في المغازة.",
@@ -134,6 +134,7 @@
 
   /* ------------------------------------------------------------ état */
   var langue = "fr", accueil = null, produits = null, chargeTout = null, tutto = {}, propres = [];
+  var toutVoir = false;   // accueil : la liste complète seulement sur demande (« Voir tous les produits »)
   var filtreFam = "", sous = "", texte = "", tri = "pertinence", magasin = "", marquesChoisies = {}, voirPromos = false, montres = PAR_PAGE;
   var panier = lirePanier();
   var $ = function (id) { return document.getElementById(id); };
@@ -218,8 +219,8 @@
     var h = '<button type="button" class="famille" data-f="" aria-pressed="' + (filtreFam === "" && !voirPromos) + '"><span class="ico">' +
       svg("M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z") + '</span><b>' + esc(t("tout")) + '</b><small>' + (total ? iso(String(total)) : "") + '</small></button>';
     var nbTutto = propres.length + Object.keys(tutto).length;
-    if (nbTutto) h += '<button type="button" class="famille famille-tutto" data-f="__tutto" aria-pressed="' + (filtreFam === "__tutto") + '" style="--fa:#FFE7A3;--fc:#8A5A00"><span class="ico">' +
-      svg("M3 9l1.5-5h15L21 9M3 9h18M3 9v11h18V9M8 20v-6h8v6") + "</span><b>Tutto Clean</b><small>" + iso(String(nbTutto)) + "</small></button>";
+    h += '<button type="button" class="famille famille-tutto" data-f="__tutto" aria-pressed="' + (filtreFam === "__tutto") + '" style="--fa:#FFE7A3;--fc:#8A5A00"><span class="ico">' +
+      svg("M3 9l1.5-5h15L21 9M3 9h18M3 9v11h18V9M8 20v-6h8v6") + "</span><b>Tutto Clean</b><small>" + (nbTutto ? iso(String(nbTutto)) : "") + "</small></button>";
     FAMILLES.forEach(function (f) {
       if (accueil && !nb[f[0]]) return;               // rayon sans produit en stock : pas de bouton vide
       h += '<button type="button" class="famille" data-f="' + f[0] + '" aria-pressed="' + (filtreFam === f[0]) + '" style="--fa:' + f[3] + ';--fc:' + f[4] + '"><span class="ico">' +
@@ -329,6 +330,8 @@
   function afficher() {
     var g = $("grille"); if (!g) return;
     afficherAccueil(); afficherFil(); afficherSous(); afficherMarques();
+    $("produits").hidden = accueilVisible() && !toutVoir;
+    if (accueil) $("voir-tous-nb").textContent = "(" + iso(String(accueil.total || 0)) + ")";
     var fam = famille(filtreFam);
     $("liste-titre").textContent = filtreFam === "__tutto" ? "Tutto Clean" : fam ? (sous ? nomSous(sous) : nomFam(fam)) : voirPromos ? t("promosTitre") : texte ? t("rechercheTitre", { q: texte }) : t("tous");
     if (!accueil && !produits) { g.innerHTML = '<p class="chargement">' + esc(t("chargement")) + "</p>"; return; }
@@ -343,7 +346,7 @@
     var b = $("btn-plus"); b.hidden = reste <= 0; b.textContent = t("voirPlus", { n: iso(String(Math.min(reste, PAR_PAGE))) });
   }
   function allerA(fam, s) {
-    filtreFam = fam; sous = s || ""; voirPromos = false; montres = PAR_PAGE; marquesChoisies = {};
+    filtreFam = fam; sous = s || ""; voirPromos = false; montres = PAR_PAGE; marquesChoisies = {}; toutVoir = false;
     afficherFamilles(); afficher();
     var cible = accueilVisible() ? document.body : $("produits");
     cible.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -475,6 +478,9 @@
     $("btn-langue").addEventListener("click", changerLangue);
     $("familles").addEventListener("click", function (ev) {
       var b = ev.target.closest(".famille"); if (!b) return;
+      if (b.getAttribute("data-f") === "__tutto" && !(propres.length + Object.keys(tutto).length)) {   // pas encore de prix Tutto Clean : la boutique
+        filtreFam = ""; texte = ""; $("q").value = ""; afficherFamilles(); afficher(); $("boutique").scrollIntoView({ behavior: "smooth" }); return;
+      }
       if (b.getAttribute("data-f") === "") { texte = ""; $("q").value = ""; }
       allerA(b.getAttribute("data-f"));
     });
@@ -487,6 +493,7 @@
       var b = ev.target.closest("[data-aller]"); if (!b) return;
       if (b.getAttribute("data-aller") === "accueil") { texte = ""; $("q").value = ""; allerA(""); } else allerA(filtreFam);
     });
+    $("voir-tous").addEventListener("click", function () { toutVoir = true; montres = PAR_PAGE; afficher(); $("produits").scrollIntoView({ behavior: "smooth" }); });
     $("voir-promos").addEventListener("click", function () { filtreFam = ""; sous = ""; voirPromos = true; tri = "remise"; $("tri").value = "remise"; montres = PAR_PAGE; afficherFamilles(); afficher(); $("produits").scrollIntoView({ behavior: "smooth" }); });
     var minuteur;
     $("q").addEventListener("input", function () {
