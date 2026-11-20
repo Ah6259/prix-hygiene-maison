@@ -9,7 +9,7 @@ Même machine que Prix des Eaux et Prix snacks (modèle « suivi de prix », pro
 Sorties : data/accueil.json (léger), data/produits.json (liste complète), donnees/historique.json, donnees/etat.json.
 Usage : python3 robot/relever.py [--local] [--sans-images]
 """
-import hashlib, html, io, json, re, subprocess, sys, time
+import hashlib, html, io, json, os, re, subprocess, sys, time
 from datetime import date, timedelta  # noqa: F401 (timedelta : tests)
 from pathlib import Path
 from urllib.parse import urlencode
@@ -267,6 +267,9 @@ def photos(offres, sans_reseau=False, maximum=4000):
     Photo introuvable ou illisible : la carte montre le dessin de la famille (jamais une image d'un autre site)."""
     carnet = charger(DONNEES / "images.json", {})
     nouvelles = 0
+    maximum = int(os.environ.get("HM_PHOTOS_MAX", maximum))
+    # les photos VUES d'abord (promotions de l'accueil, puis les moins chères) : le site se remplit par le haut
+    offres = sorted(offres, key=lambda o: (-(1 if o.get("r") else 0), o.get("p") or 0))
     try:
         from PIL import Image
     except ImportError:
