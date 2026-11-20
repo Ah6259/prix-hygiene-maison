@@ -300,7 +300,7 @@
 
   // produit sans photo chez le magasin (169 produits Géant le 21/11/2026) : vignette aux couleurs du rayon, dessin + marque en grand
   function sansPhoto(p) {
-    var f = famille(p.f) || [0, 0, 0, "#EEF2FF", "#2350E6", ICONE_SANS];
+    var f = famille(p.f) || [0, 0, 0, "#E3F7F3", "#0B7A70", ICONE_SANS];
     return '<span class="sans" style="--fa:' + f[3] + ';--fc:' + f[4] + '">' + svg(f[5], 56) + (p.m ? "<b>" + esc(p.m) + "</b>" : "") + "</span>";
   }
   function carte(p) {
