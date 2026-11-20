@@ -120,7 +120,7 @@ const capture = async nom => { const r = await cmd("Page.captureScreenshot", { f
 
 // « Comment fonctionne ce site ? » : repère dans app.js -> mot attendu dans l'explication (règle § 44)
 const FONCTIONS = [["sonRecherche", "Recherche"], ["data-plus", "Ajouter"], ["numeroCommande", "numéro de commande"], ["pu[0]", "Prix au litre"],
-  ["badge-promo", "Promotion"], ["panne", "Panne d'un magasin"], ["hm_client", "Vos données"], ["nb[1]", "nombre de magasins"], ["famille(", "Les rayons"], ["marquesChoisies", "Filtres"], ["noterCommande", "numéro de commande, le gouvernorat et les produits"]];
+  ["badge-promo", "Promotion"], ["panne", "Panne d'un magasin"], ["hm_client", "Vos données"], ["nb[1]", "nombre de magasins"], ["famille(", "Les rayons"], ["marquesChoisies", "Filtres"], ["noterCommande", "numéro de commande, le gouvernorat et les produits"], ["qr-telecharger", "QR code"]];
 const appjs = readFileSync(join(source, "app.js"), "utf8");
 for (const [repere] of FONCTIONS) verif(appjs.includes(repere), `repère présent dans app.js : ${repere}`);
 
@@ -133,6 +133,7 @@ for (const [nom, w, h, mobile] of [["telephone", 390, 844, true], ["ordinateur",
   await cmd("Page.navigate", { url }); await pause(1500);
   verif(!demandes.includes("/data/produits.json"), "accueil léger : liste complète pas chargée avant le 1er geste");
   verif(await val(`document.querySelector("#produits").hidden`), "accueil : pas de liste complète d'office");
+  verif(await val(`(() => { const i = document.querySelector("#qr-image"); return !!i && i.complete && i.naturalWidth > 0 && i.src.endsWith("hygiene-fr.svg") && document.querySelector("#qr-telecharger").href.endsWith("hygiene-fr.png"); })()`), "QR code à partager (image affichée + téléchargement)");
   verif(await val(`(() => { const b = document.querySelector("#boutique"), h = document.querySelector(".hero"); return !!b && !!h && b.getBoundingClientRect().top > h.getBoundingClientRect().top && b.getBoundingClientRect().top < document.querySelector("#t-rayons").getBoundingClientRect().top; })()`), "accueil : la boutique Tutto Clean juste après le bandeau, avant les rayons");
   verif((await val(`document.querySelector('.hero .btn-orange').href`) || "").startsWith("https://wa.me/21699453345"), "bandeau : « Commander chez Tutto Clean »");
   await val(`document.querySelector("#voir-tous").click()`); await pause(300);
@@ -263,6 +264,7 @@ for (const [nom, w, h, mobile] of [["telephone", 390, 844, true], ["ordinateur",
   verif(await val(`document.documentElement.dir === "rtl" && document.documentElement.lang === "ar"`), "arabe : page de droite à gauche");
   verif(await val(`document.querySelector("h1").textContent.includes("أسعار")`), "arabe : titre traduit");
   verif(await val(`location.search.includes("lang=ar")`), "arabe : adresse ?lang=ar");
+  verif(await val(`document.querySelector("#qr-image").src.endsWith("hygiene-ar.svg")`), "arabe : QR code de la page arabe");
   verif(await val(`document.documentElement.scrollWidth <= innerWidth`), "arabe : rien ne dépasse de l'écran");
   verif(!(await val(chevauche)), "arabe : le nom du site n'est pas coupé par les boutons");
   verif(await val(`getComputedStyle(document.querySelector(".badge-promo") || document.body).direction`) !== "rtl" || !(await val(`!!document.querySelector(".badge-promo")`)), "arabe : remise écrite « −33 % » (de gauche à droite)");

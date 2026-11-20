@@ -280,3 +280,10 @@ body.a-panier main{padding-bottom:84px}
 .btn-partager{flex:none;width:46px;height:46px;border-radius:50%;border:2px solid var(--bord);background:#fff;color:var(--navy);display:grid;place-items:center}
 .btn-partager:hover{border-color:var(--bleu);color:var(--bleu)}
 @media (max-width:760px){.btn-partager{width:42px;height:42px;margin-inline-start:auto}.btn-partager+.btn-panier{margin-inline-start:0}}
+/* QR code à partager (21/11/2026) */
+.qr-carte{display:flex;align-items:center;gap:22px;background:#fff;border:1px solid var(--bord);border-radius:20px;box-shadow:var(--ombre);padding:18px 20px}
+.qr-carte img{width:180px;height:180px;flex:none;border-radius:12px;border:1px solid var(--bord);background:#fff;padding:6px}
+.qr-txt h2{margin:0 0 6px;font-size:21px;color:var(--navy)}
+.qr-txt p{margin:0 0 8px;color:var(--doux);font-size:14px}
+.qr-txt .qr-adresse{font-weight:800;color:var(--navy);font-size:16px}
+@media (max-width:560px){.qr-carte{flex-direction:column;text-align:center}.qr-carte img{width:200px;height:200px}}

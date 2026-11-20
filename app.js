@@ -16,7 +16,7 @@
       chercher: "Rechercher un produit, une marque…", panier: "Panier", "hero-pastille": "Carrefour · Géant · prix vérifiés chaque nuit",
       titre: "Les prix de l'entretien<br>et de l'hygiène,<br><span class=\"surligne\">livrés chez vous</span>",
       phrase: "Comparez, remplissez votre panier : Tutto Clean vous livre partout en Tunisie.",
-      "hero-promos": "Voir les promotions", "hero-wa": "Commander sur WhatsApp", "hero-commander": "Commander chez Tutto Clean", "hero-boutique": "🏪 La boutique Tutto Clean", "boutique-sur": "🏪 Votre boutique", "voir-tous": "Voir tous les produits",
+      "hero-promos": "Voir les promotions", "hero-wa": "Commander sur WhatsApp", "hero-commander": "Commander chez Tutto Clean", "hero-boutique": "🏪 La boutique Tutto Clean", "boutique-sur": "🏪 Votre boutique", "voir-tous": "Voir tous les produits", "qr-titre": "Partagez le site avec un QR code", "qr-phrase": "Vos proches le scannent avec l'appareil photo de leur téléphone et arrivent directement sur le site.", "qr-telecharger": "Télécharger le QR code",
       "p1-t": "Prix vérifiés chaque nuit", p1: "Carrefour et Géant, produits en stock", "p2-t": "Livré chez vous", p2: "Partout en Tunisie, frais donnés avant",
       "p3-t": "Commande en 1 minute", p3: "Sur WhatsApp, sans compte",
       "rayons-titre": "Nos rayons", "rayons-sous": "Tout pour la maison et l'hygiène, rangé comme en magasin.",
@@ -54,7 +54,7 @@
       chercher: "ابحث عن منتج أو علامة…", panier: "السلة", "hero-pastille": "كارفور · جيان · أسعار محيّنة كل ليلة",
       titre: "أسعار مواد التنظيف<br>والنظافة،<br><span class=\"surligne\">تصلك إلى بيتك</span>",
       phrase: "قارن، املأ سلتك: Tutto Clean يوصّل إليك في كامل تونس.",
-      "hero-promos": "شاهد التخفيضات", "hero-wa": "اطلب عبر واتساب", "hero-commander": "اطلب من Tutto Clean", "hero-boutique": "🏪 محل Tutto Clean", "boutique-sur": "🏪 محلّك", "voir-tous": "عرض كل المنتجات",
+      "hero-promos": "شاهد التخفيضات", "hero-wa": "اطلب عبر واتساب", "hero-commander": "اطلب من Tutto Clean", "hero-boutique": "🏪 محل Tutto Clean", "boutique-sur": "🏪 محلّك", "voir-tous": "عرض كل المنتجات", "qr-titre": "شارك الموقع برمز QR", "qr-phrase": "يمسحه أقاربك بكاميرا الهاتف فيصلون مباشرة إلى الموقع.", "qr-telecharger": "حمّل رمز QR",
       "p1-t": "أسعار محيّنة كل ليلة", p1: "كارفور وجيان، المنتجات المتوفرة", "p2-t": "توصيل إلى بيتك", p2: "إلى كامل تونس، الكلفة تُعطى مسبقًا",
       "p3-t": "طلب في دقيقة", p3: "عبر واتساب، دون حساب",
       "rayons-titre": "أقسامنا", "rayons-sous": "كل ما يلزم للبيت والنظافة، مرتّب كما في المغازة.",
@@ -170,6 +170,8 @@
     var b = $("btn-langue");
     b.textContent = langue === "ar" ? "Français" : "العربية";
     b.lang = langue === "ar" ? "fr" : "ar";
+    var qr = "assets/qr/hygiene-" + langue;   // QR de la langue de la page (version arabe = adresse ?lang=ar)
+    $("qr-image").src = qr + ".svg"; $("qr-telecharger").href = qr + ".png";
     remplirGouvs(); afficherComment(); afficherFamilles(); afficherAccueil(); afficherMaj(); afficher(); afficherPanier();
   }
   function changerLangue() {
@@ -465,6 +467,7 @@
       "<b>Promotion</b> : la remise en rouge (−20 %) vient du prix barré écrit par le magasin.",
       "<b>Recherche</b> : par produit ou par marque, même avec une autre écriture (Omo, Ariel, Dixan…).",
       "<b>Tutto Clean</b> : la boutique qui livre tape elle-même ses prix (sans la livraison) dans son espace privé ; ils s'affichent tout de suite à côté de ceux des grandes surfaces, avec le bouton « Tutto Clean » pour voir tous ses produits. Le panier prend le prix Tutto Clean quand il existe.",
+      "<b>QR code</b> : sur l'accueil, un QR code de l'adresse du site (et un bouton pour le télécharger, à envoyer ou à imprimer) : on le scanne avec l'appareil photo du téléphone. Le bouton rond « Partager » en haut envoie aussi le lien du site.",
       "<b>Commander</b> : le bouton « Ajouter » met le produit dans votre panier (gardé dans votre téléphone). « Commander » prépare un message WhatsApp avec un numéro de commande, vos produits et votre adresse : vous l'envoyez vous-même. Tutto Clean vous répond avec SON prix et les frais de livraison (toute la Tunisie) ; rien n'est payé sur le site.",
       "<b>Panne d'un magasin</b> : si un site de magasin ne répond pas, ses derniers prix restent affichés avec leur date.",
       "<b>Vos données</b> : aucun compte, aucun cookie ; votre nom, votre téléphone et votre adresse restent dans votre téléphone et ne partent que dans le message WhatsApp que vous envoyez. Pour le suivi de la boutique, le site garde seulement le numéro de commande, le gouvernorat et les produits (400 jours). Visites comptées sans cookie (GoatCounter)."
@@ -477,6 +480,7 @@
       "<b>التخفيض</b>: النسبة الحمراء تأتي من السعر المشطوب الذي كتبه المتجر.",
       "<b>البحث</b>: بالمنتج أو بالعلامة، حتى بكتابة مختلفة.",
       "<b>Tutto Clean</b>: المحل الذي يوصّل يكتب أسعاره بنفسه (دون التوصيل) في فضائه الخاص؛ تظهر فورًا بجانب أسعار المساحات الكبرى، مع زر «Tutto Clean» لرؤية كل منتجاته. السلة تأخذ سعر Tutto Clean إن وُجد.",
+      "<b>رمز QR</b>: في الصفحة الرئيسية رمز QR لعنوان الموقع (وزر لتحميله وإرساله أو طباعته): يُمسح بكاميرا الهاتف. والزر الدائري «شارك» في الأعلى يرسل رابط الموقع أيضًا.",
       "<b>الطلب</b>: زر «أضف» يضع المنتج في سلتك (محفوظة في هاتفك). «اطلب» يحضّر رسالة واتساب برقم الطلب ومنتجاتك وعنوانك: ترسلها بنفسك. يرد عليك Tutto Clean بسعره هو وبكلفة التوصيل (كامل تونس)؛ لا دفع في الموقع.",
       "<b>عطل في متجر</b>: إذا لم يرد موقع متجر، تبقى آخر أسعاره معروضة مع تاريخها.",
       "<b>معطياتك</b>: لا حساب ولا ملفات تعريف ارتباط؛ اسمك وهاتفك وعنوانك تبقى في هاتفك ولا تخرج إلا في رسالة واتساب التي ترسلها. لمتابعة المحل، يحتفظ الموقع فقط برقم الطلب والولاية والمنتجات (400 يوم). الزيارات تُعدّ دون ملفات تعريف (GoatCounter)."
