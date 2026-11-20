@@ -4,7 +4,7 @@
 // - CSS / JS / images versionnés (?v=) : cache puis mise à jour en arrière-plan (le ?v= change à chaque modification).
 // - Jamais en cache : requêtes non-GET, autres sites (statistiques, formulaires, Telegram, polices…), pages exclues.
 // Changer CACHE_VERSION pour vider le cache de tous les téléphones.
-const CACHE_VERSION = "4";
+const CACHE_VERSION = "5";
 const PREFIXE = "prix-hygiene-maison-";                             // propre à ce site
 const CACHE = PREFIXE + CACHE_VERSION;
 const PORTEE = new URL("./", self.location.href).pathname;   // dossier du site, ici / (hygiene.clicvia.com)

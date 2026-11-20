@@ -85,3 +85,7 @@ et modèle « suivi de prix » : dépôt privé projets-ahmed (dossier parent `_
   Restent aux anciennes couleurs : la VIDÉO de présentation et son aperçu `assets/video/apercu-video.jpg` (à refaire sur le PC :
   `python fabriquer.py hygiene`) et la page 404 commune (outil commun, ne pas la modifier ici).
   Un lien déjà partagé garde l'ancien aperçu dans WhatsApp / Facebook (leur mémoire) ; les nouveaux partages montrent le nouveau.
+- **Partage (20/11/2026, capture d'Ahmed : WhatsApp montrait encore l'ancienne image et l'ancien slogan)** : WhatsApp garde en mémoire l'aperçu
+  d'une adresse déjà partagée → le bouton « Partager » (app.js `partager()`, video/video.js) envoie `https://hygiene.clicvia.com/?v4`
+  (adresse neuve) + nouveau slogan « Entretien et hygiène, livrés chez vous ». Nouvelle image d'aperçu = passer à `?v5` (l'essai vérifie que
+  le `?vN` = le n° de `og-image-vN.jpg`). Titre de la page vidéo aussi au nouveau slogan (la vidéo elle-même : à refaire sur le PC).

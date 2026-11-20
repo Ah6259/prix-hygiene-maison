@@ -1,9 +1,9 @@
 /* Page vidéo : « Partager la vidéo » partage le LIEN de cette page (menu du téléphone, sinon WhatsApp) + l'adresse du site ; clic compté. */
 (function () {
   "use strict";
-  var PAGE = "https://hygiene.clicvia.com/video/", SITE = "https://hygiene.clicvia.com/";
+  var PAGE = "https://hygiene.clicvia.com/video/", SITE = "https://hygiene.clicvia.com/?v4";   // ?v4 : adresse neuve pour l'aperçu WhatsApp (voir partager() d'app.js)
   function partager() {
-    var texte = "Les prix de l'entretien et de l'hygiène, livrés chez vous — Tutto Clean\nLe site : " + SITE + "\nRegardez la vidéo :";
+    var texte = "Entretien et hygiène, livrés chez vous — Tutto Clean\nLe site : " + SITE + "\nRegardez la vidéo :";
     if (window.goatcounter && goatcounter.count) { try { goatcounter.count({ path: "partage/video", title: "Partage vidéo", event: true }); } catch (e) { /* compteur absent */ } }
     function whatsapp() { window.open("https://wa.me/?text=" + encodeURIComponent(texte + " " + PAGE), "_blank", "noopener"); }
     if (navigator.share) navigator.share({ title: "Prix Hygiène & Maison", text: texte, url: PAGE }).catch(function (e) { if (!e || e.name !== "AbortError") whatsapp(); });
