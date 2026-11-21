@@ -14,8 +14,8 @@ et modèle « suivi de prix » : dépôt privé projets-ahmed (dossier parent `_
 - FR + AR (`?lang=ar`, bouton, choix gardé), nombres de gauche à droite en arabe, mode sombre, téléphone d'abord.
 - Accueil léger (règle § 60) : `data/accueil.json` (24 produits + nombres) tout de suite, `data/produits.json` au 1er geste.
 - Familles (13) : linge, vaisselle, maison, javel (et WC), desodorisant, accessoires, papier, bebe, feminine, corps, cheveux, bouche, soins.
-- Cache des téléphones : changer le `?v=` de style.css / app.js dans index.html à chaque modification (style.css 20261121n — aussi dans
-  tutto-clean/, video/, commandes/ —, app.js 20261121k) ; `CACHE_VERSION` de sw.js (4) ; puis `node tools/construire_ar.mjs` (page arabe).
+- Cache des téléphones : changer le `?v=` de style.css / app.js dans index.html à chaque modification (style.css 20261121o — aussi dans
+  tutto-clean/, video/, commandes/ —, app.js 20261121k) ; `CACHE_VERSION` de sw.js (6) ; puis `node tools/construire_ar.mjs` (page arabe).
 - GoatCounter : préfixe `/prix-hygiene-maison` (`assets/stats.js`), compteur commun ; clic « commande envoyée » compté comme événement.
 
 ## Tutto Clean (boutique de l'ami, 20/11/2026 : nom autorisé par Ahmed, prix SANS livraison)
@@ -89,3 +89,6 @@ et modèle « suivi de prix » : dépôt privé projets-ahmed (dossier parent `_
   d'une adresse déjà partagée → le bouton « Partager » (app.js `partager()`, video/video.js) envoie `https://hygiene.clicvia.com/?v4`
   (adresse neuve) + nouveau slogan « Entretien et hygiène, livrés chez vous ». Nouvelle image d'aperçu = passer à `?v5` (l'essai vérifie que
   le `?vN` = le n° de `og-image-vN.jpg`). Titre de la page vidéo aussi au nouveau slogan (la vidéo elle-même : à refaire sur le PC).
+- **21/11/2026 — couleurs un cran plus foncées (mode clair lisible, règle § 65)** : boutons #0F766E (au lieu de #0D9488), liens #0E7490,
+  WhatsApp #15803D, promos #E11D48, « & Maison » du pied en menthe #5EEAD4 ; style.css 20261121o, `CACHE_VERSION` 6. Contrôle
+  `mode_sombre.mjs --clair --seuil 4.5` et mode sombre : 0 texte illisible.
