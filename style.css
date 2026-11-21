@@ -2,9 +2,10 @@
    rangé comme Carrefour). Marine + orange + blanc, photos des produits, téléphone d'abord, FR + AR (dir=rtl). */
 :root{
   /* 20/11/2026 (retour des visiteurs : « couleurs très vieilles ») : palette moderne « propre » turquoise / menthe, fond clair.
+     21/11/2026 : un cran plus foncé (texte blanc lisible, contraste ≥ 4,5 : contrôle mode_sombre.mjs --clair --seuil 4.5).
      Les noms des variables sont gardés (--orange = couleur des boutons d'action, --navy = encre foncée). */
-  --navy:#0F3B47; --navy-2:#13505F; --bleu:#0B7F8C; --bleu-clair:#E4F6F7; --orange:#0D9488; --orange-fonce:#0B7A70; --orange-clair:#E3F7F3;
-  --jaune:#5EEAD4; --jaune-clair:#FFF7DD; --wa:#1DAA61; --rouge:#F43F5E;
+  --navy:#0F3B47; --navy-2:#13505F; --bleu:#0E7490; --bleu-clair:#E4F6F7; --orange:#0F766E; --orange-fonce:#115E59; --orange-clair:#E3F7F3;
+  --jaune:#5EEAD4; --jaune-clair:#FFF7DD; --wa:#15803D; --rouge:#E11D48;
   --fond:#F5F9FA; --carte:#FFFFFF; --texte:#10232B; --doux:#5A6B73; --bord:#E1EBEE;
   --ombre:0 1px 2px rgba(15,59,71,.05),0 6px 18px rgba(15,59,71,.07); --ombre-forte:0 12px 32px rgba(15,59,71,.14);
   --r:16px; --police:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; --police-ar:"Tajawal","Plus Jakarta Sans",sans-serif;
@@ -45,7 +46,7 @@ button{cursor:pointer}
 .recherche svg{position:absolute;top:50%;transform:translateY(-50%);inset-inline-start:16px;color:var(--doux)}
 .recherche input{width:100%;height:46px;border:2px solid var(--bord);border-radius:999px;padding:0 18px;padding-inline-start:46px;background:var(--fond);font-size:15.5px;transition:border-color .15s,background .15s}
 .recherche input:focus{outline:none;border-color:var(--bleu);background:#fff}
-.btn-panier{position:relative;display:flex;align-items:center;gap:10px;border:0;background:var(--orange);color:#fff;border-radius:999px;height:46px;padding:0 18px 0 14px;font-weight:800;flex:none;box-shadow:0 6px 16px rgba(13,148,136,.28)}
+.btn-panier{position:relative;display:flex;align-items:center;gap:10px;border:0;background:var(--orange);color:#fff;border-radius:999px;height:46px;padding:0 18px 0 14px;font-weight:800;flex:none;box-shadow:0 6px 16px rgba(15,118,110,.28)}
 .btn-panier:hover{background:var(--orange-fonce)}
 .btn-panier .bp-txt{display:flex;flex-direction:column;line-height:1.1;text-align:start}
 .btn-panier .bp-txt small{font-size:11px;font-weight:600;opacity:.9}
@@ -87,7 +88,7 @@ button{cursor:pointer}
 @media (min-width:861px){.hero-phrase{white-space:nowrap}}
 .hero-btns{display:flex;flex-wrap:wrap;gap:10px}
 .btn-orange,.btn-clair{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:999px;padding:13px 22px;font-weight:800;font-size:15px;text-decoration:none;border:0}
-.btn-orange{background:var(--orange);color:#fff;box-shadow:0 8px 20px rgba(13,148,136,.3)}
+.btn-orange{background:var(--orange);color:#fff;box-shadow:0 8px 20px rgba(15,118,110,.3)}
 .btn-orange:hover{background:var(--orange-fonce)}
 .btn-clair{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.3)}
 
@@ -232,7 +233,7 @@ button{cursor:pointer}
 
 /* ---------- barre « Commander » (téléphone) */
 .barre-panier{position:fixed;inset-inline:0;bottom:0;z-index:35;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(transparent,rgba(244,246,250,.95) 35%)}
-.btn-commander{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;max-width:520px;margin:0 auto;border:0;border-radius:999px;background:var(--wa);color:#fff;font-size:16.5px;font-weight:800;padding:14px;box-shadow:0 10px 26px rgba(29,170,97,.35)}
+.btn-commander{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;max-width:520px;margin:0 auto;border:0;border-radius:999px;background:var(--wa);color:#fff;font-size:16.5px;font-weight:800;padding:14px;box-shadow:0 10px 26px rgba(21,128,61,.35)}
 .bp-nb{background:#fff;color:var(--wa);border-radius:999px;min-width:26px;height:26px;display:grid;place-items:center;font-size:14px;padding:0 6px}
 body.a-panier main{padding-bottom:84px}
 
@@ -381,3 +382,4 @@ body.a-panier main{padding-bottom:84px}
   .qr-txt .btn-orange{padding:10px 14px;font-size:13.5px}
 }
 .boutique-txt h2{margin-bottom:2px}
+.pied .marque-pied b .et{color:#5EEAD4}
