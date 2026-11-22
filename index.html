@@ -43,7 +43,8 @@
   "@context": "https://schema.org",
   "@graph": [
     {"@type": "WebSite", "name": "Prix Hygiène & Maison", "url": "https://hygiene.clicvia.com/", "inLanguage": ["fr", "ar"],
-     "description": "Prix des produits d'entretien, de nettoyage et d'hygiène relevés chaque nuit en grande surface en Tunisie, et commande livrée."},
+     "description": "Prix des produits d'entretien, de nettoyage et d'hygiène relevés chaque nuit en grande surface en Tunisie, et commande livrée.", "publisher": {"@id": "https://clicvia.com/#organisation"}},
+    {"@type": "Organization", "@id": "https://clicvia.com/#organisation", "name": "Clicvia", "url": "https://clicvia.com/", "sameAs": ["https://www.facebook.com/1327283777142447"]},
     {"@type": "FAQPage", "mainEntity": [
       {"@type": "Question", "name": "D'où viennent les prix affichés ?",
        "acceptedAnswer": {"@type": "Answer", "text": "Ils sont relevés automatiquement chaque nuit sur les boutiques en ligne des grandes surfaces tunisiennes (Carrefour, Géant), seulement pour les produits en stock. Ils sont indicatifs."}},
