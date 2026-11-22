@@ -92,3 +92,9 @@ et modèle « suivi de prix » : dépôt privé projets-ahmed (dossier parent `_
 - **21/11/2026 — couleurs un cran plus foncées (mode clair lisible, règle § 65)** : boutons #0F766E (au lieu de #0D9488), liens #0E7490,
   WhatsApp #15803D, promos #E11D48, « & Maison » du pied en menthe #5EEAD4 ; style.css 20261121o, `CACHE_VERSION` 6. Contrôle
   `mode_sombre.mjs --clair --seuil 4.5` et mode sombre : 0 texte illisible.
+
+## 22/11/2026 — Google + IA (demande d'Ahmed : « que Google et les IA indexent nos sites »)
+- État Search Console (21/11) : accueil « Discovered - currently not indexed » (jamais visité par Google), aucune requête.
+- JSON-LD de l'accueil : WebSite avec éditeur `Organization` Clicvia (@id https://clicvia.com/#organisation, page Facebook) ; la page arabe
+  n'a pas de JSON-LD (inchangé). Pas de lien ni de phrase « Clicvia » visible ajoutés (Ahmed ne veut pas de « Tous nos services » ici).
+- robots.txt et llms.txt (sans chiffre) déjà bons : inchangés. Essais de la page et du robot : verts.
