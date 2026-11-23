@@ -45,7 +45,7 @@ jobs:
             echo "Rien de nouveau"
           else
             git commit -q -m "Relevé des prix du $(date +%d/%m/%Y)"
-            git pull -q --rebase -X theirs
+            git pull -q --rebase --autostash -X theirs
             git push -q
           fi
       - name: Essai de la page dans Chromium
