@@ -33,7 +33,7 @@
       "panier-note": "Rien n'est payé ici. Tutto Clean vous répond sur WhatsApp avec son prix et les frais de livraison ; vous confirmez ensuite.",
       "pied-phrase": "Prix relevés chaque nuit chez Carrefour et Géant. Site non officiel.",
       "pied-commander-t": "Commander", "pied-commander": "WhatsApp : 99 453 345", "pied-appeler": "Appeler la boutique", "pied-boutique": "Adresse de la boutique",
-      "pied-infos-t": "Informations", "pied-comment": "Comment fonctionne ce site ?", "pied-video": "Vidéo de présentation", "pied-confid": "Confidentialité", "pied-cond": "Conditions d'utilisation", "pied-tous": "Tous nos services",
+      "pied-infos-t": "Informations", "pied-comment": "Comment fonctionne ce site ?", "pied-video": "Vidéo de présentation", "pied-eau": "Eau minérale livrée : comparez les prix", "pied-confid": "Confidentialité", "pied-cond": "Conditions d'utilisation", "pied-tous": "Tous nos services",
       droits: "tous droits réservés", photos: "Photos des produits : sites des magasins, avec leur accord.",
       tout: "Tout", accueil: "Accueil", ajouter: "Ajouter", moins: "Retirer un", plus: "Ajouter un", tousRayon: "Tout le rayon",
       chez: "chez", magasins: "dans {n} magasins sur {m}", voirPlus: "Voir {n} produits de plus", chargement: "Chargement des produits…",
@@ -71,7 +71,7 @@
       "panier-note": "لا دفع هنا. يرد عليك Tutto Clean عبر واتساب بسعره وكلفة التوصيل، ثم تؤكد.",
       "pied-phrase": "أسعار تُجمع كل ليلة من كارفور وجيان. موقع غير رسمي.",
       "pied-commander-t": "الطلب", "pied-commander": "واتساب: 99 453 345", "pied-appeler": "اتصل بالمحل", "pied-boutique": "عنوان المحل",
-      "pied-infos-t": "معلومات", "pied-comment": "كيف يعمل الموقع؟", "pied-video": "الفيديو التقديمي", "pied-confid": "الخصوصية", "pied-cond": "شروط الاستعمال", "pied-tous": "كل خدماتنا",
+      "pied-infos-t": "معلومات", "pied-comment": "كيف يعمل الموقع؟", "pied-video": "الفيديو التقديمي", "pied-eau": "الماء المعدني يصلك إلى البيت: قارن الأسعار", "pied-confid": "الخصوصية", "pied-cond": "شروط الاستعمال", "pied-tous": "كل خدماتنا",
       droits: "جميع الحقوق محفوظة", photos: "صور المنتجات: مواقع المتاجر، بموافقتها.",
       tout: "الكل", accueil: "الرئيسية", ajouter: "أضف", moins: "أنقص واحدًا", plus: "أضف واحدًا", tousRayon: "كل القسم",
       chez: "في", magasins: "في {n} متجرًا من {m}", voirPlus: "عرض {n} منتجات أخرى", chargement: "جارٍ تحميل المنتجات…",
@@ -167,6 +167,11 @@
     document.querySelectorAll("[data-t]").forEach(function (el) { var v = t(el.getAttribute("data-t")); if (typeof v === "string") el.textContent = v; });
     document.querySelectorAll("[data-t-html]").forEach(function (el) { el.innerHTML = t(el.getAttribute("data-t-html")); });
     document.querySelectorAll("[data-t-ph]").forEach(function (el) { el.placeholder = t(el.getAttribute("data-t-ph")); });
+    // liens vers nos autres sites : la page arabe mène à leur page arabe (une adresse par langue)
+    document.querySelectorAll("[data-href-ar]").forEach(function (el) {
+      if (!el.dataset.hrefFr) el.dataset.hrefFr = el.getAttribute("href");
+      el.setAttribute("href", langue === "ar" ? el.dataset.hrefAr : el.dataset.hrefFr);
+    });
     var b = $("btn-langue");
     b.textContent = langue === "ar" ? "Français" : "العربية";
     b.lang = langue === "ar" ? "fr" : "ar";
@@ -462,6 +467,12 @@
         body: JSON.stringify({ c: c, g: gouv, l: l, lang: langue }) }).catch(function () { /* carnet injoignable : sans gravité */ });
     } catch (e) { /* navigateur trop ancien : sans gravité */ }
   }
+  // Cercle économique Clicvia (règle commune § 67, CE.1, 23/11/2026) : chaque passage vers un autre de nos sites est compté
+  // « lien-site/<site de départ>-<site d'arrivée> » (même format que les annuaires), sans bloquer la navigation.
+  document.addEventListener("click", function (e) {
+    var l = e.target.closest && e.target.closest("[data-lien]");
+    if (l && window.goatcounter && goatcounter.count) { try { goatcounter.count({ path: "lien-site/" + l.dataset.lien, title: "Lien vers " + l.dataset.lien, event: true }); } catch (x) { /* compteur absent */ } }
+  });
   // Bouton rond « Partager » (règle commune § 8) : menu de partage du téléphone, sinon WhatsApp ; clic compté dans GoatCounter.
   // Il partage un LIEN : la page vidéo de présentation (PAGE_VIDEO, dès qu'elle existe) + l'adresse du site.
   var PAGE_VIDEO = "https://hygiene.clicvia.com/video/";   // vidéo de présentation (21/11/2026)
@@ -496,6 +507,7 @@
       "<b>QR code</b> : sur l'accueil, un QR code de l'adresse du site (et un bouton pour le télécharger, à envoyer ou à imprimer) : on le scanne avec l'appareil photo du téléphone. Le bouton rond « Partager » en haut envoie aussi le lien du site.",
       "<b>Commander</b> : le bouton « Ajouter » met le produit dans votre panier (gardé dans votre téléphone). « Commander » prépare un message WhatsApp avec un numéro de commande, vos produits et votre adresse : vous l'envoyez vous-même. Tutto Clean vous répond avec SON prix et les frais de livraison (toute la Tunisie) ; rien n'est payé sur le site.",
       "<b>Panne d'un magasin</b> : si un site de magasin ne répond pas, ses derniers prix restent affichés avec leur date.",
+      "<b>Nos autres sites</b> : en bas de page, un lien mène vers Prix des Eaux (eau minérale livrée). Le passage d'un site à l'autre est compté sans rien savoir de vous.",
       "<b>Vos données</b> : aucun compte, aucun cookie ; votre nom, votre téléphone et votre adresse restent dans votre téléphone et ne partent que dans le message WhatsApp que vous envoyez. Pour le suivi de la boutique, le site garde seulement le numéro de commande, le gouvernorat et les produits (400 jours). Visites comptées sans cookie (GoatCounter)."
     ];
     var ar = [
@@ -510,6 +522,7 @@
       "<b>رمز QR</b>: في الصفحة الرئيسية رمز QR لعنوان الموقع (وزر لتحميله وإرساله أو طباعته): يُمسح بكاميرا الهاتف. والزر الدائري «شارك» في الأعلى يرسل رابط الموقع أيضًا.",
       "<b>الطلب</b>: زر «أضف» يضع المنتج في سلتك (محفوظة في هاتفك). «اطلب» يحضّر رسالة واتساب برقم الطلب ومنتجاتك وعنوانك: ترسلها بنفسك. يرد عليك Tutto Clean بسعره هو وبكلفة التوصيل (كامل تونس)؛ لا دفع في الموقع.",
       "<b>عطل في متجر</b>: إذا لم يرد موقع متجر، تبقى آخر أسعاره معروضة مع تاريخها.",
+      "<b>مواقعنا الأخرى</b>: في أسفل الصفحة رابط إلى موقع أسعار المياه (الماء المعدني يصلك إلى البيت). يُحتسب الانتقال من موقع إلى آخر دون معرفة أي شيء عنك.",
       "<b>معطياتك</b>: لا حساب ولا ملفات تعريف ارتباط؛ اسمك وهاتفك وعنوانك تبقى في هاتفك ولا تخرج إلا في رسالة واتساب التي ترسلها. لمتابعة المحل، يحتفظ الموقع فقط برقم الطلب والولاية والمنتجات (400 يوم). الزيارات تُعدّ دون ملفات تعريف (GoatCounter)."
     ];
     $("comment-corps").innerHTML = (langue === "ar" ? ar : fr).map(function (p) { return "<p>" + p + "</p>"; }).join("");

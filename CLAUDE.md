@@ -98,3 +98,4 @@ et modèle « suivi de prix » : dépôt privé projets-ahmed (dossier parent `_
 - JSON-LD de l'accueil : WebSite avec éditeur `Organization` Clicvia (@id https://clicvia.com/#organisation, page Facebook) ; la page arabe
   n'a pas de JSON-LD (inchangé). Pas de lien ni de phrase « Clicvia » visible ajoutés (Ahmed ne veut pas de « Tous nos services » ici).
 - robots.txt et llms.txt (sans chiffre) déjà bons : inchangés. Essais de la page et du robot : verts.
+- 23/11/2026 (cercle économique, CE.8, « fais » d'Ahmed) : lien « Eau minérale livrée : comparez les prix » en bas de page vers https://prix-eau.clicvia.com/ (page arabe -> /ar/, `data-href-ar`) ; chaque passage vers un autre de nos sites compté `lien-site/<départ>-<arrivée>` (ici `lien-site/hygiene-eau`, attribut `data-lien`) ; essai dans essai_page.mjs.

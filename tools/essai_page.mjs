@@ -123,7 +123,7 @@ const capture = async nom => { const r = await cmd("Page.captureScreenshot", { f
 
 // « Comment fonctionne ce site ? » : repère dans app.js -> mot attendu dans l'explication (règle § 44)
 const FONCTIONS = [["sonRecherche", "Recherche"], ["data-plus", "Ajouter"], ["numeroCommande", "numéro de commande"], ["pu[0]", "Prix au litre"],
-  ["badge-promo", "Promotion"], ["panne", "Panne d'un magasin"], ["hm_client", "Vos données"], ["nb[1]", "nombre de magasins"], ["famille(", "Les rayons"], ["marquesChoisies", "Filtres"], ["noterCommande", "numéro de commande, le gouvernorat et les produits"], ["qr-telecharger", "QR code"], ["PAGE_VIDEO", "Vidéo de présentation"]];
+  ["badge-promo", "Promotion"], ["panne", "Panne d'un magasin"], ["hm_client", "Vos données"], ["nb[1]", "nombre de magasins"], ["famille(", "Les rayons"], ["marquesChoisies", "Filtres"], ["noterCommande", "numéro de commande, le gouvernorat et les produits"], ["qr-telecharger", "QR code"], ["PAGE_VIDEO", "Vidéo de présentation"], ["lien-site/", "Nos autres sites"]];
 const appjs = readFileSync(join(source, "app.js"), "utf8");
 for (const [repere] of FONCTIONS) verif(appjs.includes(repere), `repère présent dans app.js : ${repere}`);
 
@@ -141,6 +141,9 @@ for (const [nom, w, h, mobile] of [["telephone", 390, 844, true], ["ordinateur",
     return a && a !== "none" && copies * 2 === toutes && toutes >= 4; })()`), "photos du bandeau qui BOUGENT (défilement en boucle, copies aria-hidden)");
   verif(await val(`document.documentElement.scrollWidth <= innerWidth`), "photos qui bougent : rien ne dépasse de l'écran");
   verif(await val(`/mis à jour le \\d{2}\\/\\d{2}\\/\\d{4}|محيّنة يوم/.test(document.querySelector('[data-t="hero-pastille"]').textContent)`), "date du dernier relevé visible en haut du bandeau");
+  // 23/11/2026 (cercle économique, CE.8) : lien vers Prix des Eaux, page arabe -> page arabe, passage compté (lien-site/hygiene-eau)
+  verif(await val(`(() => { const a = document.querySelector('a[data-lien="hygiene-eau"]'); if (!a) return false;
+    const ar = document.documentElement.lang === "ar"; return a.href === (ar ? "https://prix-eau.clicvia.com/ar/" : "https://prix-eau.clicvia.com/"); })()`), "lien vers Prix des Eaux (adresse de la bonne langue)");
   if (w < 500) {   // 21/11/2026 (Ahmed) : à l'ouverture, les photos du bandeau sont ENTIÈRES dans le 1er écran d'un téléphone (405 x 740 visibles)
     verif(await val(`(() => { const r = document.querySelector("#hero-photos .r1 .tuile"); if (!r) return false; scrollTo(0, 0);
       return r.getBoundingClientRect().bottom + scrollY <= 740; })()`), "téléphone : photos du bandeau entières à l'ouverture (écran de 740 px)");
