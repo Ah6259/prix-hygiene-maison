@@ -1,14 +1,14 @@
 {
  "carrefour": {
-  "date": "2026-11-23",
-  "derniere_reussite": "2026-11-23",
+  "date": "2026-11-24",
+  "derniere_reussite": "2026-11-24",
   "erreur": null,
-  "offres": 2390
+  "offres": 2391
  },
  "geant": {
-  "date": "2026-11-23",
-  "derniere_reussite": "2026-11-23",
+  "date": "2026-11-24",
+  "derniere_reussite": "2026-11-24",
   "erreur": null,
-  "offres": 3818
+  "offres": 3821
  }
 }
