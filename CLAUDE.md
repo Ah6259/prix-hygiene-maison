@@ -108,3 +108,9 @@ et modèle « suivi de prix » : dépôt privé projets-ahmed (dossier parent `_
   n'a pas de JSON-LD (inchangé). Pas de lien ni de phrase « Clicvia » visible ajoutés (Ahmed ne veut pas de « Tous nos services » ici).
 - robots.txt et llms.txt (sans chiffre) déjà bons : inchangés. Essais de la page et du robot : verts.
 - 23/11/2026 (cercle économique, CE.8, « fais » d'Ahmed) : lien « Eau minérale livrée : comparez les prix » en bas de page vers https://prix-eau.clicvia.com/ (page arabe -> /ar/, `data-href-ar`) ; chaque passage vers un autre de nos sites compté `lien-site/<départ>-<arrivée>` (ici `lien-site/hygiene-eau`, attribut `data-lien`) ; essai dans essai_page.mjs.
+
+## 25/11/2026 — plan Google (B.2, « fais » d'Ahmed après la chute Google d'octobre)
+- **lastmod HONNÊTE** : sitemap.xml (écrit à la main, 3 adresses) porte la date du dernier VRAI changement de chaque page (outil COMMUN
+  `tools/lastmod.py`, empreinte du contenu sans menus, pied, scripts, ?v= ni dates, gardée dans `tools/lastmod.json`). Après toute
+  modification de index.html (puis `node tools/construire_ar.mjs`) : `python3 tools/lastmod.py tools/lastmod.json`, sinon le test
+  `python tools/test_lastmod.py tools/lastmod.json` (tests.yml) est rouge. Dates du jour : 20/11 (avant : 21/11). Aucune page maigre.

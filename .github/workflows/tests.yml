@@ -29,6 +29,8 @@ jobs:
       - name: Page arabe a jour (une adresse par langue)
         run: |
           node tools/construire_ar.mjs --verifier
+      - name: Dates honnetes du plan du site (lastmod) et pages noindex
+        run: python tools/test_lastmod.py tools/lastmod.json
       - name: Tests du robot
         run: |
           python tools/test_robot.py
