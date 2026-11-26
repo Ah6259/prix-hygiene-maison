@@ -1,14 +1,14 @@
 {
  "carrefour": {
-  "date": "2026-11-25",
-  "derniere_reussite": "2026-11-25",
+  "date": "2026-11-26",
+  "derniere_reussite": "2026-11-26",
   "erreur": null,
-  "offres": 2392
+  "offres": 2393
  },
  "geant": {
-  "date": "2026-11-25",
-  "derniere_reussite": "2026-11-24",
-  "erreur": "curl 28 https://www.geantdrive.tn/tunis-city/230-les-cheveux?resultsPerPage=100&page=9: curl: (28) Operation timed out after 60001 milliseconds with 48669 bytes received",
-  "offres": 3821
+  "date": "2026-11-26",
+  "derniere_reussite": "2026-11-26",
+  "erreur": null,
+  "offres": 3831
  }
 }
